@@ -8,6 +8,12 @@
     android:orientation="vertical"
     android:gravity="top">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -33,6 +39,10 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,5 +62,31 @@
         android:layout_marginRight="10dp"
         android:clickable="true"
         android:background="@drawable/bg_button"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        tools:listitem="@layout/card_for_recycler"
+        android:id="@+id/recyclerGroups"/>
+    </LinearLayout>
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+    >
+
+
+</LinearLayout>
+
+
+
 
 </LinearLayout>
