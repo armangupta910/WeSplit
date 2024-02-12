@@ -1,14 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.addExpenseFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.groupsFragment"
+    android:orientation="vertical"
+    android:gravity="top">
 
-    <!-- TODO: Update blank fragment layout -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:cardBackgroundColor="@color/green1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+
+            >
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/back_button"
+                android:background="@color/green1"
+                android:id="@+id/backAddExpenseFragment"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Add expense"
+                android:gravity="start"
+                android:textColor="@color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_weight="10"
+                android:textStyle="bold"/>
+
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/check_image"
+                android:background="@color/green1"
+                android:id="@+id/checkAddExpense"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="With you and: "
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        >
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/description_image"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Enter a Description"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        >
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/money_image"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:inputType="numberDecimal"
+            android:hint="0.00"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        >
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/note_image"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:inputType="text"
+            android:hint="Add a note"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        >
+        <TextView
+            android:paddingTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="Paid by "
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10dp"
 
-</FrameLayout>
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="you"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:layout_gravity="end"
+            android:textSize="20dp"
+            android:textColor="@color/green1"
+            android:clickable="true"
+            android:background="@drawable/bg_button"/>
+
+        <TextView
+            android:paddingTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="and split "
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="5dp"
+
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="equally"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:layout_gravity="end"
+            android:textSize="20dp"
+            android:textColor="@color/green1"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:background="@drawable/bg_button"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>
