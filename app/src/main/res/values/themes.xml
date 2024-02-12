@@ -3,6 +3,9 @@
     <style name="Base.Theme.WeSplit" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorSecondary">@color/green1</item>
+        <item name="colorPrimary">@color/green1</item>
+        <item name="colorPrimaryVariant">@color/green1</item>
     </style>
 
     <style name="Theme.WeSplit" parent="Base.Theme.WeSplit" />

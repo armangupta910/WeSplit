@@ -3,11 +3,13 @@ package com.example.wesplit
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
 import com.example.wesplit.activities.add_expense_activity
+import com.example.wesplit.activities.create_group_activity
 import com.example.wesplit.fragments.accountFragment
 import com.example.wesplit.fragments.activityFragment
 import com.example.wesplit.fragments.friendsFragment
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             activity.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             account.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             friends.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
+            findViewById<LinearLayout>(R.id.specialButtons).visibility = View.VISIBLE
             supportFragmentManager.beginTransaction().replace(R.id.fragment,groupsFragment()).commit()
         }
         friends.setOnClickListener {
@@ -38,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             activity.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             account.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             groups.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
+            findViewById<LinearLayout>(R.id.specialButtons).visibility = View.GONE
             supportFragmentManager.beginTransaction().replace(R.id.fragment,friendsFragment()).commit()
         }
         activity.setOnClickListener {
@@ -45,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             account.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             friends.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             groups.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
+            findViewById<LinearLayout>(R.id.specialButtons).visibility = View.GONE
             supportFragmentManager.beginTransaction().replace(R.id.fragment,activityFragment()).commit()
         }
         account.setOnClickListener {
@@ -52,12 +57,17 @@ class MainActivity : AppCompatActivity() {
             activity.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             friends.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             groups.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
+            findViewById<LinearLayout>(R.id.specialButtons).visibility = View.GONE
             supportFragmentManager.beginTransaction().replace(R.id.fragment,accountFragment()).commit()
         }
 
         val addExpense = findViewById<Button>(R.id.addExpense)
         addExpense.setOnClickListener {
             startActivity(Intent(this,add_expense_activity::class.java))
+        }
+
+        val createGroup = findViewById<Button>(R.id.createNewGroup).setOnClickListener {
+            startActivity(Intent(this,create_group_activity::class.java))
         }
     }
 }
