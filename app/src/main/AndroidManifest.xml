@@ -13,6 +13,12 @@
         android:theme="@style/Theme.WeSplit"
         tools:targetApi="31">
         <activity
+            android:name=".activities.getting_details_activity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.create_group_activity"
             android:exported="false" />
         <activity
@@ -22,7 +28,7 @@
             android:name=".activities.mainPageActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.sign_in_activity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,6 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/green1">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WeSplit"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/black"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/bg_button"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Sign Out"
+            android:id="@+id/signout"/>
+    </androidx.cardview.widget.CardView>
 
     <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
@@ -135,6 +162,7 @@
                     android:textSize="20dp"
                     android:text="Account" />
             </LinearLayout>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

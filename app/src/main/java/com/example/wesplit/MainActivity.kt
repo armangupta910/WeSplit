@@ -1,5 +1,6 @@
 package com.example.wesplit
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,15 +11,22 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
 import com.example.wesplit.activities.add_expense_activity
 import com.example.wesplit.activities.create_group_activity
+import com.example.wesplit.activities.sign_in_activity
 import com.example.wesplit.fragments.accountFragment
 import com.example.wesplit.fragments.activityFragment
 import com.example.wesplit.fragments.friendsFragment
 import com.example.wesplit.fragments.groupsFragment
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val token=getSharedPreferences("data", Context.MODE_PRIVATE)
+        val editor=token.edit()
+        editor.putString("data","wesplitisactivenow")
+        editor.commit()
 
         val fragment:FragmentContainerView = findViewById(R.id.fragment)
         supportFragmentManager.beginTransaction().add(R.id.fragment,groupsFragment()).commit()
@@ -62,12 +70,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         val addExpense = findViewById<Button>(R.id.addExpense)
-        addExpense.setOnClickListener {
-            startActivity(Intent(this,add_expense_activity::class.java))
-        }
 
         val createGroup = findViewById<Button>(R.id.createNewGroup).setOnClickListener {
             startActivity(Intent(this,create_group_activity::class.java))
         }
+
+        val button:Button = findViewById(R.id.signout)
+        button.setOnClickListener {
+            signout()
+        }
+    }
+    private fun signout(){
+        val shared = getSharedPreferences("data",Context.MODE_PRIVATE)
+        val edit = shared.edit()
+        edit.putString("data","")
+        edit.apply()
+        FirebaseAuth.getInstance().signOut()
+        startActivity(Intent(this,sign_in_activity::class.java))
+        finish()
     }
 }

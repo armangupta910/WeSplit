@@ -91,7 +91,6 @@ class groupsFragment : Fragment() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
             popupMenu.show()
         }
     }

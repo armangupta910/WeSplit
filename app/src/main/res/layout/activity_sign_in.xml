@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    tools:context=".activities.sign_in_activity">
+
+
+    <ImageView
+        android:layout_width="255dp"
+        android:layout_height="255dp"
+        android:id="@+id/imageView2"
+        android:scaleType="fitXY"
+        android:src="@drawable/logo"
+        android:adjustViewBounds="false"/>
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/google"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/bg_button"
+            android:text="Continue with Google"
+            android:textStyle="bold"
+            android:id="@+id/googleSignIn"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
