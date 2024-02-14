@@ -70,6 +70,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         val addExpense = findViewById<Button>(R.id.addExpense)
+        addExpense.setOnClickListener {
+            startActivity(Intent(this,add_expense_activity::class.java))
+        }
 
         val createGroup = findViewById<Button>(R.id.createNewGroup).setOnClickListener {
             startActivity(Intent(this,create_group_activity::class.java))

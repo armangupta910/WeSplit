@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/equally"
+            android:title="Equally"
+            android:checkable="true"/>
+        <item
+            android:id="@+id/unequally"
+            android:title="Unequally"
+            android:checkable="true"/>
+    </group>
+</menu>

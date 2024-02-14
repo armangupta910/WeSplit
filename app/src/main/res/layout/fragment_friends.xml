@@ -67,8 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            tools:listitem="@layout/card_for_recycler"
-            android:id="@+id/recyclerGroups"/>
+            tools:listitem="@layout/card_for_friends_list"
+            android:id="@+id/recyclerFriends"/>
     </LinearLayout>
 
     <LinearLayout

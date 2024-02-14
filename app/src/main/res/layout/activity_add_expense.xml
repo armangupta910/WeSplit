@@ -129,6 +129,7 @@
 
             android:textStyle="bold"/>
         <TextView
+            android:id="@+id/paidby"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="you"
@@ -151,6 +152,7 @@
 
             android:textStyle="bold"/>
         <TextView
+            android:id="@+id/equallyorunequally"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:text="equally"
