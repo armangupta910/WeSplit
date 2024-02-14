@@ -45,11 +45,13 @@ class getting_details_activity : AppCompatActivity() {
     }
     private fun addUserToFirestore(name: String, email: String, phoneNumber: String) {
         val user = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+        val friends:MutableList<String> = mutableListOf()
         val db = FirebaseFirestore.getInstance()
             val userData = hashMapOf(
                 "name" to name,
                 "email" to email,
-                "phone_number" to phoneNumber
+                "phone_number" to phoneNumber,
+                "friends" to friends
             )
 
             db.collection("Users").document(user)

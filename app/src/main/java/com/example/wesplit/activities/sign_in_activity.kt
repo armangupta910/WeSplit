@@ -35,9 +35,23 @@ class sign_in_activity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_in)
         token=getSharedPreferences("data", Context.MODE_PRIVATE)
         if(token.getString("data","")!=""){
+            val userUid = FirebaseAuth.getInstance().currentUser!!.uid.toString()
 
-            startActivity(Intent(this,MainActivity::class.java))
-            finish()
+            val db = FirebaseFirestore.getInstance()
+            db.collection("Users").get().addOnSuccessListener {
+                for(i in it){
+                    if(i.id.toString() == userUid){
+                        ref = false
+                        startActivity(Intent(this,MainActivity::class.java))
+                        finish()
+                    }
+                }
+                if(ref == true){
+                    startActivity(Intent(this,getting_details_activity::class.java))
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this,"Could not search",Toast.LENGTH_SHORT).show()
+            }
         }
         val butt:Button = findViewById(R.id.googleSignIn)
 

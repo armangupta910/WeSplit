@@ -1,30 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.friendsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.groupsFragment"
+    android:orientation="vertical"
+    android:gravity="top">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <TextView
-        android:id="@+id/demo"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Friends Fragment"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="88dp" />
-
-    <Button
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="524dp"
-        android:text="signout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.552"
-        android:id="@+id/signout"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:orientation="vertical"
+        >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:cardBackgroundColor="@color/green1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="end"
+                >
+                <EditText
+                    android:layout_weight="10"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Search by Tag"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="0dp"
+                    android:background="@drawable/bg_button"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <ImageButton
+
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/search_image"
+                    android:background="@color/green1"
+                    android:id="@+id/searchGroupsFragment"/>
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/add_group_black_image"
+                    android:background="@color/green1"
+                    android:id="@+id/addFriend"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            tools:listitem="@layout/card_for_recycler"
+            android:id="@+id/recyclerGroups"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

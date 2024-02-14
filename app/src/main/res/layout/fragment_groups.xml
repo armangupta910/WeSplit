@@ -44,6 +44,7 @@
                 android:background="@color/green1"
                 android:id="@+id/searchGroupsFragment"/>
             <ImageButton
+                android:visibility="gone"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/add_group_black_image"
