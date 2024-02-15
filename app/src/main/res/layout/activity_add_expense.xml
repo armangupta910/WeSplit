@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.groupsFragment"
     android:orientation="vertical"
+    android:id="@+id/parent"
     android:gravity="top">
 
     <androidx.cardview.widget.CardView
@@ -46,6 +47,7 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,6 +57,58 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <AutoCompleteTextView
+            android:id="@+id/searchBox"
+            android:textSize="20dp"
+            android:padding="10dp"
+            android:drawableStart="@drawable/search_image"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="wrap_content"
+            android:hint="Find Friends"
+            android:background="@drawable/bg_button"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/goForSearch"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:text="Go"
+            android:background="@drawable/bg_button"/>
+
+    </LinearLayout>
+
+<!--    <TextView-->
+<!--        android:id="@+id/friends"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="With you and: "-->
+<!--        android:textSize="20dp"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:textStyle="bold"/>-->
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        >
+        <!-- Chips will be added here programmatically -->
+    </com.google.android.material.chip.ChipGroup>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -109,61 +163,91 @@
             android:hint="Add a note"/>
     </LinearLayout>
     <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        >
-        <TextView
-            android:paddingTop="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text="Paid by "
-            android:textSize="20dp"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp">
+
+        <!-- First Line -->
+        <LinearLayout
             android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:layout_marginLeft="10dp"
-
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/paidby"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="you"
-            android:layout_marginLeft="5dp"
-            android:textStyle="bold"
-            android:layout_gravity="end"
-            android:textSize="20dp"
-            android:textColor="@color/green1"
-            android:clickable="true"
-            android:background="@drawable/bg_button"/>
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:gravity="">
 
-        <TextView
-            android:paddingTop="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text="and split "
-            android:textSize="20dp"
-            android:textColor="@color/black"
-            android:layout_marginLeft="5dp"
+            <TextView
+                android:paddingTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Paid by:  "
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
 
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/equallyorunequally"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text="equally"
-            android:layout_marginLeft="5dp"
-            android:textStyle="bold"
-            android:layout_gravity="end"
-            android:textSize="20dp"
-            android:textColor="@color/green1"
-            android:layout_marginRight="10dp"
-            android:clickable="true"
-            android:background="@drawable/bg_button"/>
+            <TextView
+                android:id="@+id/paidby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="you"
+                android:textSize="20sp"
+                android:textColor="@color/green1"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_button"
+                android:layout_marginLeft="5dp"/>
+        </LinearLayout>
+
+        <!-- Second Line -->
+        <LinearLayout
+            android:layout_marginBottom="0dp"
+            android:paddingTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:paddingTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Split:  "
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/equallyorunequally"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="equally"
+                android:textSize="20sp"
+                android:textColor="@color/green1"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_button"
+                android:layout_marginLeft="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <!-- Other UI components -->
     </LinearLayout>
 
 
