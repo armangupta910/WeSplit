@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
             friends.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             groups.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
             findViewById<LinearLayout>(R.id.specialButtons).visibility = View.GONE
+            findViewById<Button>(R.id.signout).visibility = View.GONE
             supportFragmentManager.beginTransaction().replace(R.id.fragment,accountFragment()).commit()
         }
 

@@ -4,11 +4,13 @@
 
     >
 
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false"
         />
     <uses-permission android:name="android.permission.CAMERA"/>
+
 
     <application
 
@@ -21,6 +23,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeSplit"
         tools:targetApi="31">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+
         <activity
             android:name=".activities.add_friend_activity"
             android:screenOrientation="portrait"

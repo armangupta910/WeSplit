@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wesplit.R
 import com.example.wesplit.recyclerviews.adaptorForGroupsFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class groupsFragment : Fragment() {
@@ -37,6 +39,7 @@ class groupsFragment : Fragment() {
         filter.setOnClickListener { view->
             showPopupMenu(view)
         }
+
         return frag
     }
     private fun showPopupMenu(view: View) {
