@@ -1,5 +1,6 @@
 package com.example.wesplit.activities
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +15,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.PopupMenu
@@ -31,14 +34,22 @@ import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.w3c.dom.Text
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.CountDownLatch
 
 class add_expense_activity : AppCompatActivity() {
     private var selectedMenuItemId: Int? = null
     private var friendsList: MutableList<String> = mutableListOf()
     private lateinit var autoCompleteTextView: AutoCompleteTextView
+    var paidBy = "You"
+    var ref = 0
 
     private var friendsAdded:MutableList<String> = mutableListOf()
+    val friendsNames = mutableListOf<String>()
+    val hashi:HashMap<String,String> = hashMapOf() // UID to Name
+    var map:HashMap<String,String> = hashMapOf() // Name to Amount (You have to use hashi to convert names into respective UIDs )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
@@ -56,7 +67,189 @@ class add_expense_activity : AppCompatActivity() {
         autoCompleteTextView = findViewById(R.id.searchBox)
         setupAutoCompleteTextView()
 
+        Toast.makeText(this,"Size of Hashi: ${hashi.size}, Size of FriendsName: ${friendsNames.size}",Toast.LENGTH_SHORT).show()
+
+        var addExpense: ImageButton = findViewById(R.id.checkAddExpense)
+        addExpense.setOnClickListener {
+            var name = ""
+            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+                name = it.get("name").toString()
+            }
+            hashi[FirebaseAuth.getInstance().currentUser?.uid.toString()] = name
+            Toast.makeText(this,"Friends Added: ${friendsAdded.size}",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Hashi size: ${hashi.size}",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Map size: ${map.size}",Toast.LENGTH_SHORT).show()
+            val amount = findViewById<EditText>(R.id.amount).text.toString()
+            if(ref == 0){
+                val amountinintegertoeachperson = amount.toInt()/(hashi.size)
+                //Itte rupye baantne hain.....amount Hashi mein jo UIDs hai unmein
+                val data:MutableList<HashMap<String,String>> = mutableListOf()
+
+                val paidby:HashMap<String,String> = hashMapOf()
+                if(paidBy == "You"){
+                    paidby["Paid by"] = FirebaseAuth.getInstance().currentUser?.uid.toString()
+                }
+                else{
+                    paidby["Paid by"] = paidBy
+                }
+
+                val paidsforandamounts:HashMap<String,String> = hashMapOf()
+                var UIDtoamount:HashMap<String,String> = hashMapOf()
+//                for(i in hashi){
+//                    UIDtoamount[i.key] = map[i.value].toString()
+//                }
+
+                for(i in hashi){
+                    paidsforandamounts[i.key] = amountinintegertoeachperson.toString()
+                }
+                Log.d(TAG,"Paid for and Amount: ${paidsforandamounts}")
+                paidsforandamounts[FirebaseAuth.getInstance().currentUser?.uid.toString()] = amountinintegertoeachperson.toString()
+
+                var otherData:HashMap<String,String> = hashMapOf(
+                    "Description" to findViewById<EditText>(R.id.description).text.toString(),
+                    "Note" to findViewById<EditText>(R.id.note).text.toString()
+                )
+
+                data.add(paidby)
+                data.add(paidsforandamounts)
+                data.add(otherData)
+
+                Log.d(TAG,"Data going to be inserted: ${data}")
+
+                addOrUpdateExpenses(UIDtoamount,data)
+
+                Log.d(TAG,"Final Done")
+
+            }
+            else{
+                Toast.makeText(this,"Ghusa",Toast.LENGTH_SHORT).show()
+                val amountinintegertoeachperson = amount.toInt()/(hashi.size+1)
+                //Itte rupye baantne hain.....amount Hashi mein jo UIDs hai unmein
+                val data:MutableList<HashMap<String,String>> = mutableListOf()
+
+                val paidby:HashMap<String,String> = hashMapOf()
+                if(paidBy == "You"){
+                    paidby["Paid by"] = FirebaseAuth.getInstance().currentUser?.uid.toString()
+                }
+                else{
+                    paidby["Paid by"] = paidBy
+                }
+
+                val paidsforandamounts:HashMap<String,String> = hashMapOf()
+                var UIDtoamount:HashMap<String,String> = hashMapOf()
+                for(i in hashi){
+                    UIDtoamount[i.key] = map[i.value].toString()
+                }
+                UIDtoamount[FirebaseAuth.getInstance().currentUser?.uid.toString()] = map["You"].toString()
+
+                Log.d(TAG,"UID to Amounts: ${UIDtoamount}")
+
+                for(i in UIDtoamount){
+                    paidsforandamounts[i.key] = i.value
+                }
+
+                var otherData:HashMap<String,String> = hashMapOf(
+                    "Description" to findViewById<EditText>(R.id.description).text.toString(),
+                    "Note" to findViewById<EditText>(R.id.note).text.toString()
+                )
+
+                data.add(paidby)
+                data.add(paidsforandamounts)
+                data.add(otherData)
+
+                addOrUpdateExpenses(UIDtoamount,data)
+            }
+        }
+
     }
+
+    fun addOrUpdateExpenses(UIDtoamount:HashMap<String,String>, expensesList: MutableList<HashMap<String, String>>) {
+        for(uid in UIDtoamount) {
+            val db = FirebaseFirestore.getInstance()
+            val userDocRef = db.collection("Users").document(uid.key)
+
+            // Get the current date and time as a string
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val currentDateAndTime = dateFormat.format(Date())
+
+            userDocRef.get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // Check if the Expenses field exists
+                    if (document.data?.containsKey("Expenses") == true) {
+                        // The Expenses field exists, update it with new data
+                        val expenses = document.data?.get("Expenses") as Map<String, Any>?
+                        val currentExpensesList =
+                            expenses?.get(currentDateAndTime) as MutableList<Map<String, String>>?
+
+                        if (currentExpensesList != null) {
+                            // If there's already an entry for the current date, add to it
+                            currentExpensesList.addAll(expensesList)
+                            userDocRef.update("Expenses.$currentDateAndTime", currentExpensesList)
+                                .addOnSuccessListener {
+                                    println("Expenses for $currentDateAndTime successfully updated.")
+                                }
+                                .addOnFailureListener { e ->
+                                    e.printStackTrace()
+                                }
+                        } else {
+                            // If there's no entry for the current date, create one
+                            userDocRef.update("Expenses.$currentDateAndTime", expensesList)
+                                .addOnSuccessListener {
+                                    println("New expenses for $currentDateAndTime successfully added.")
+                                }
+                                .addOnFailureListener { e ->
+                                    e.printStackTrace()
+                                }
+                        }
+                    } else {
+                        // The Expenses field does not exist, create it
+                        val expensesMap = hashMapOf<String, Any>(
+                            "Expenses" to hashMapOf(
+                                currentDateAndTime to expensesList
+                            )
+                        )
+                        userDocRef.update(expensesMap).addOnSuccessListener {
+                            // Successfully updated the document with the Expenses field
+                            println("Document successfully updated with new Expenses field.")
+                            Log.d(TAG, "Done")
+                        }.addOnFailureListener { e ->
+                            // Handle the failure
+                            Log.d(TAG, "Not Done")
+                            e.printStackTrace()
+                        }
+                    }
+                } else {
+                    // Handle the case where the document does not exist
+                    println("Document does not exist!")
+                }
+            }.addOnFailureListener { exception ->
+                // Handle any failures in getting the document
+                exception.printStackTrace()
+            }
+        }
+    }
+
+    fun addExpense(documentId: String, expensesMap: Map<String, String>) {
+        // Get an instance of Firestore
+        val db = FirebaseFirestore.getInstance()
+
+        // Prepare the outer map which contains the "Expenses" key
+        val documentMap = hashMapOf(
+            "Expenses" to expensesMap
+        )
+
+        // Add the document with the specified ID and the map to the "Expenses" collection
+        db.collection("Expenses").document(documentId).set(documentMap)
+            .addOnSuccessListener {
+                // Handle success
+                Log.d("Firestore", "DocumentSnapshot successfully written!")
+            }
+            .addOnFailureListener { e ->
+                // Handle failure
+                Log.w("Firestore", "Error writing document", e)
+            }
+    }
+
 
 
 
@@ -88,12 +281,10 @@ class add_expense_activity : AppCompatActivity() {
     private fun fetchDataFromFirestoreAndFilterFriendsByName(queryText: String,autoCompleteTextView: AutoCompleteTextView) {
         val db = FirebaseFirestore.getInstance()
         val userId = FirebaseAuth.getInstance().currentUser?.uid.toString() // Make sure to replace this with the actual current user's ID
-        val friendsNames = mutableListOf<String>()
-        val hashi:HashMap<String,String> = hashMapOf() // UID to Name
 
         // Fetch the current user's friends list
         db.collection("Users").document(userId).get().addOnSuccessListener { document ->
-            val friendsList = document.get("friends") as? List<String> ?: return@addOnSuccessListener
+            val friendsList = document.get("friends") as? MutableList<String> ?: return@addOnSuccessListener
 
             // Track completion of all friend queries
             val countDownLatch = CountDownLatch(friendsList.size)
@@ -106,12 +297,25 @@ class add_expense_activity : AppCompatActivity() {
                     // Check if the friend's name matches the query and add it to the list
                     friendName?.let {
                         if (it.contains(queryText, ignoreCase = true)) { // Basic partial and case-insensitive matching
-                            friendsNames.add(it)
-                            hashi[friendDoc.id.toString()] = it
+                            var fuck = 0
+                            for(i in friendsNames){
+                                if(i==it){
+                                    fuck = 1
+                                    break
+                                }
+                            }
+                            if(fuck == 0){
+                                friendsNames.add(it)
+                                hashi[friendDoc.id.toString()] = it
+                            }
+
                         }
                     }
 
                     countDownLatch.countDown()
+
+                    Log.d(TAG,"Friends Name: ${friendsNames}")
+                    Log.d(TAG,"Hashi: ${hashi}")
                 }.addOnFailureListener {
                     // Handle failure
                     countDownLatch.countDown()
@@ -200,56 +404,17 @@ class add_expense_activity : AppCompatActivity() {
                             itemsMap[i] = hashi[i].toString()
                         }
                         showPopupMenuWithMapItems(it, itemsMap)
-//                        val listView = LayoutInflater.from(this).inflate(R.layout.popup_list_layout, null) as ListView
-//                        var items:MutableList<String> = mutableListOf() // Example items
-//                        for (i in friendsAdded){
-//                            hashi[i]?.let { items.add(it) }
-//                        }
-//                        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, items)
-//                        listView.adapter = adapter
-//
-//                        // Initialize the PopupWindow
-//                        val popupWindow = PopupWindow(listView, view.width, WindowManager.LayoutParams.WRAP_CONTENT, true)
-//
-//                        // Handle list item clicks
-//                        listView.setOnItemClickListener { _, _, position, _ ->
-//                            val selectedItem = hashi[items[position]]
-//                            Toast.makeText(this, "Selected: $selectedItem", Toast.LENGTH_SHORT).show()
-//                            popupWindow.dismiss() // Dismiss the popup after an item is clicked
-//                        }
-//
-//                        // Show the PopupWindow below the TextView
-//                        popupWindow.showAsDropDown(view)
+
                     }
-
-
-
-
-
-//                    var demoref = 0
-//                    for(item in friendsAdded){
-//                        if(item == reqUID){
-//                            demoref = 1
-//                            break
-//                        }
-//                    }
-//                    if(demoref == 0){
-//                        friendsAdded.add(reqUID)
-//                        Toast.makeText(this, "${friendsAdded.size} clicked!", Toast.LENGTH_SHORT).show()
-//                    }
-//                    else{
-//                        Toast.makeText(this,"Already Added",Toast.LENGTH_SHORT).show()
-//                    }
 
                 }
 
             }
 
-            // Wait for all queries to complete
             Thread {
                 try {
                     countDownLatch.await()
-                    // This will run on a background thread, switch back to the UI thread to update UI components
+
                     runOnUiThread {
                         updateAutoCompleteTextView(friendsNames)
                     }
@@ -277,9 +442,11 @@ class add_expense_activity : AppCompatActivity() {
             // Find the key (UID) associated with the clicked name
             val selectedKey = itemsMap.filterValues { it == menuItem.title }.keys.firstOrNull()
             if(menuItem.title == "you"){
+                paidBy = "You"
                 findViewById<TextView>(R.id.paidby).setText("you")
             }
             else{
+                paidBy = selectedKey.toString()
                 findViewById<TextView>(R.id.paidby).setText(itemsMap[selectedKey])
             }
 
@@ -304,7 +471,7 @@ class add_expense_activity : AppCompatActivity() {
         }
     }
 
-    var ref = 0
+
     val texts:MutableList<TextView> = mutableListOf()
     val edits:MutableList<EditText> = mutableListOf()
     private fun showPopupMenu(view: View) {
@@ -341,8 +508,8 @@ class add_expense_activity : AppCompatActivity() {
 
                     FirebaseFirestore.getInstance().collection("Users").get().addOnSuccessListener {
                         var name:MutableList<String> = mutableListOf()
-                        var hashmap:HashMap<String,String> = hashMapOf()
-                        var map:HashMap<String,String> = hashMapOf()
+                        var hashmap:HashMap<String,String> = hashMapOf() //UID to Name
+
                         for(i in friendsAdded){
                             for(j in it){
                                 if(j.id.toString() == i){
@@ -352,6 +519,7 @@ class add_expense_activity : AppCompatActivity() {
                             }
                         }
                         val items = name
+                        items.add("You")
                         val linearLayoutContainer = findViewById<LinearLayout>(R.id.linearLayoutContainer)
                         items.forEachIndexed { index, item ->
                             val textview = TextView(this).apply {
@@ -378,6 +546,7 @@ class add_expense_activity : AppCompatActivity() {
 
                                 override fun afterTextChanged(s: Editable?) {
                                     map[item] =  s.toString()// Update the corresponding user input in the list
+                                    Log.d(TAG,"Amounts: ${map}")
                                 }
                             })
                             val container = LinearLayout(this).apply {
