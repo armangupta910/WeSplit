@@ -42,7 +42,7 @@
                 android:layout_height="50dp"
                 android:src="@drawable/check_image"
                 android:background="@color/green1"
-                android:id="@+id/checkAddExpense"/>
+                android:id="@+id/checkAddGroup"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -61,6 +61,7 @@
             android:layout_height="60dp"
             android:src="@drawable/profile_image"/>
         <EditText
+            android:id="@+id/groupName"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:hint="Group name"/>
@@ -76,6 +77,7 @@
         android:textStyle="bold"/>
 
     <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
@@ -118,5 +120,34 @@
 
 
     </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Participants"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"/>
+
+    <AutoCompleteTextView
+        android:background="@drawable/bg_button"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:drawableStart="@drawable/search_image"
+        android:id="@+id/friendsAutoCompleteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter friend's name" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/selectedFriendsChipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>
