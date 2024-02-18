@@ -23,6 +23,7 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.PopupWindow
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.forEach
@@ -71,6 +72,8 @@ class add_expense_activity : AppCompatActivity() {
 
         var addExpense: ImageButton = findViewById(R.id.checkAddExpense)
         addExpense.setOnClickListener {
+            findViewById<ProgressBar>(R.id.progress).visibility = View.VISIBLE
+            addExpense.visibility = View.GONE
             var name = ""
             FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
                 name = it.get("name").toString()
@@ -159,6 +162,9 @@ class add_expense_activity : AppCompatActivity() {
 
                 addOrUpdateExpenses(UIDtoamount,data)
             }
+            Toast.makeText(this,"Expenditure added",Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this,MainActivity::class.java))
+            finish()
         }
 
     }

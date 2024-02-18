@@ -45,6 +45,16 @@
                 android:background="@color/green1"
                 android:id="@+id/checkAddExpense"/>
 
+            <ProgressBar
+                android:id="@+id/progress"
+                android:visibility="gone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/check_image"
+                android:background="@color/green1"
+                android:foregroundTint="@color/black"
+                android:indeterminateTint="@color/creme"/>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
