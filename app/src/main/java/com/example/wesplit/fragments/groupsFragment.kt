@@ -30,10 +30,30 @@ class groupsFragment : Fragment() {
         // Inflate the layout for this fragment
         val frag = inflater.inflate(R.layout.fragment_groups, container, false)
 
-        val x = frag.findViewById<RecyclerView>(R.id.recyclerGroups)
-        val y = adaptorForGroupsFragment()
-        x.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
-        x.adapter = y
+        val data:MutableList<HashMap<String,Any>> = mutableListOf()
+
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+            val groups:MutableList<String> = it.get("groups") as MutableList<String>
+            for(i in groups){
+                if(i!="") {
+
+                    FirebaseFirestore.getInstance().collection("Groups").document(i).get()
+                        .addOnSuccessListener {
+                            data.add(it.data as HashMap<String, Any>)
+                            val x = frag.findViewById<RecyclerView>(R.id.recyclerGroups)
+                            val y = adaptorForGroupsFragment(data)
+                            x.layoutManager =
+                                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+                            x.adapter = y
+                        }
+                }
+            }
+        }
+
+//        val x = frag.findViewById<RecyclerView>(R.id.recyclerGroups)
+//        val y = adaptorForGroupsFragment()
+//        x.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
+//        x.adapter = y
 
         val filter = frag.findViewById<TextView>(R.id.filterFragmentGroups)
         filter.setOnClickListener { view->
