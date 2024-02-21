@@ -1,60 +1,63 @@
 package com.example.wesplit.fragments
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.wesplit.R
+import com.example.wesplit.recyclerviews.adaptorforexpenses
+import com.example.wesplit.recyclerviews.adaptorforfriendslist
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [activityFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class activityFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_activity, container, false)
+        val frag = inflater.inflate(R.layout.fragment_activity, container, false)
+
+        val db = FirebaseFirestore.getInstance()
+        val userDocumentRef = db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+
+        userDocumentRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val expensesField:HashMap<String, MutableList<HashMap<String, String>>> = document.get("Expenses") as HashMap<String, MutableList<HashMap<String, String>>>
+                val data:MutableList<HashMap<String, MutableList<HashMap<String, String>>>> = mutableListOf()
+                for(i in expensesField){
+                    var demo:HashMap<String, MutableList<HashMap<String, String>>> = hashMapOf()
+                    demo[i.key] = i.value
+                    data.add(demo)
+                }
+                    // Convert and sort the entries by date-time in descending order
+//                data.sortBy { it.keys.first() }
+                    val x = frag.findViewById<RecyclerView>(R.id.recyclerActivity)
+                    val y = adaptorforexpenses(data)
+                    x.layoutManager = LinearLayoutManager(activity,
+                        LinearLayoutManager.VERTICAL,false)
+                    x.adapter = y
+
+            } else {
+                println("Document does not exist")
+            }
+        }.addOnFailureListener { exception ->
+            println("Error fetching document: $exception")
+        }
+
+        return frag
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment activityFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            activityFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
+
+
 }

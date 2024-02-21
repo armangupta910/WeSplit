@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
             android:layout_weight="10"
-            tools:listitem="@layout/card_for_recycler"
+            tools:listitem="@layout/card_for_expense"
             android:id="@+id/recyclerGroups"/>
         <LinearLayout
             android:id="@+id/specialButtons"
