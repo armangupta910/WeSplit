@@ -134,6 +134,8 @@ class add_expense_activity : AppCompatActivity() {
 
                     addOrUpdateExpenses(paidsforandamounts,data)
 
+                    updateLoans(paidsforandamounts,paidBy)
+
                     Log.d(TAG,"Final Done")
                 }
                 else{
@@ -160,12 +162,52 @@ class add_expense_activity : AppCompatActivity() {
                     data.add(otherData)
 
                     addOrUpdateExpenses(UIDtoamount,data)
+
+                    updateLoans(UIDtoamount,paidBy)
+
+                    Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
                 }
                 Toast.makeText(this,"Expenditure added",Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,MainActivity::class.java))
                 finish()
             }
         }
+    }
+
+    fun updateLoans(expenses: HashMap<String, String>, paidBy: String) {
+       FirebaseFirestore.getInstance().collection("Users").document(paidBy).get().addOnSuccessListener {
+           val loans:HashMap<String,String> = it.data?.get("Loans") as HashMap<String, String>
+           for(i in expenses){
+               if(i.key != paidBy){
+                   val amount:Int = i.value.toInt()
+                   val currammount:Int = loans[i.key]?.toInt() ?: 0
+                   val newamount = currammount + amount
+                   loans[i.key] = newamount.toString()
+               }
+           }
+           FirebaseFirestore.getInstance().collection("Users").document(paidBy).update("Loans",loans).addOnSuccessListener {
+               Toast.makeText(this,"Done",Toast.LENGTH_SHORT).show()
+           }
+       }
+
+        for(i in expenses){
+            if(i.key != paidBy){
+                FirebaseFirestore.getInstance().collection("Users").document(i.key).get().addOnSuccessListener {
+                    val loans:HashMap<String,String> = it.data?.get("Loans") as HashMap<String, String>
+
+                    val amount:Int = i.value.toInt()
+                    val currammount:Int = loans[paidBy]?.toInt() ?: 0
+                    val newamount = currammount - amount
+                    loans[paidBy] = newamount.toString()
+
+
+                    FirebaseFirestore.getInstance().collection("Users").document(i.key).update("Loans",loans).addOnSuccessListener {
+                        Toast.makeText(this,"Done",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
     }
 
     private fun storeFriendsNametoUID(){

@@ -53,7 +53,8 @@ class getting_details_activity : AppCompatActivity() {
                 "phone_number" to phoneNumber,
                 "friends" to friends,
                 "groups" to mutableListOf<String>(),
-                "Expenses" to hashMapOf<String,Any>()
+                "Expenses" to hashMapOf<String,Any>(),
+                "Loans" to hashMapOf<String,String>()
             )
 
             db.collection("Users").document(user)

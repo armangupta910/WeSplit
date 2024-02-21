@@ -57,9 +57,47 @@ class add_friend_activity : AppCompatActivity() {
                         phone.visibility = View.VISIBLE
 
                         findViewById<Button>(R.id.add).setOnClickListener {
-                            db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("friends",FieldValue.arrayUnion(uid)).addOnSuccessListener {
-                                Toast.makeText(this,"Friend added successfully!",Toast.LENGTH_SHORT).show()
+                            db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+                                val friends = it.get("friends") as? List<String>?: listOf()
+                                if(!friends.contains(uid)){
+                                    db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("friends",FieldValue.arrayUnion(uid)).addOnSuccessListener {
+                                        Toast.makeText(this,"Friend added successfully!",Toast.LENGTH_SHORT).show()
+                                    }
+                                    FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+                                        val loans = it.get("Loans") as? Map<String,String> ?: mapOf()
+                                        val updatedLoans = HashMap(loans)
+
+                                        updatedLoans.putAll(mapOf(uid to "0"))
+                                        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("Loans",updatedLoans).addOnSuccessListener {
+
+                                        }
+                                    }
+                                }
+                                else{
+                                    Toast.makeText(this,"Friend already added!",Toast.LENGTH_SHORT).show()
+                                }
                             }
+                            db.collection("Users").document(uid).get().addOnSuccessListener {
+                                val friends = it.get("friends") as? List<String>?: listOf()
+                                if(!friends.contains(FirebaseAuth.getInstance().currentUser?.uid.toString())){
+                                    db.collection("Users").document(uid).update("friends",FieldValue.arrayUnion(FirebaseAuth.getInstance().currentUser?.uid.toString())).addOnSuccessListener {
+                                        Toast.makeText(this,"Friend added successfully!",Toast.LENGTH_SHORT).show()
+                                    }
+                                    FirebaseFirestore.getInstance().collection("Users").document(uid).get().addOnSuccessListener {
+                                        val loans = it.get("Loans") as? Map<String,String> ?: mapOf()
+                                        val updatedLoans = HashMap(loans)
+
+                                        updatedLoans.putAll(mapOf(FirebaseAuth.getInstance().currentUser?.uid.toString() to "0"))
+                                        FirebaseFirestore.getInstance().collection("Users").document(uid).update("Loans",updatedLoans).addOnSuccessListener {
+
+                                        }
+                                    }
+                                }
+                                else{
+                                    Toast.makeText(this,"Friend already added!",Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
                         }
                     }
                 }
@@ -157,8 +195,70 @@ class add_friend_activity : AppCompatActivity() {
                                 phone.visibility = View.VISIBLE
 
                                 findViewById<Button>(R.id.add).setOnClickListener {
-                                    db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("friends",FieldValue.arrayUnion(uid)).addOnSuccessListener {
-                                        Toast.makeText(this,"Friend added successfully!",Toast.LENGTH_SHORT).show()
+                                    db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+                                        val friends = it.get("friends") as? List<String> ?: listOf()
+                                        if (!friends.contains(uid)) {
+                                            db.collection("Users")
+                                                .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                                .update("friends", FieldValue.arrayUnion(uid))
+                                                .addOnSuccessListener {
+                                                    Toast.makeText(
+                                                        this,
+                                                        "Friend added successfully!",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            FirebaseFirestore.getInstance().collection("Users")
+                                                .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                                .get().addOnSuccessListener {
+                                                    val loans =
+                                                        it.get("Loans") as? Map<String, String>
+                                                            ?: mapOf()
+                                                    val updatedLoans = HashMap(loans)
+
+                                                    updatedLoans.putAll(mapOf(uid to "-1"))
+                                                    FirebaseFirestore.getInstance()
+                                                        .collection("Users")
+                                                        .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                                        .update("Loans", updatedLoans)
+                                                        .addOnSuccessListener {
+
+                                                        }
+                                                }
+                                        }
+                                    }
+
+                                    db.collection("Users").document(uid).get().addOnSuccessListener {
+                                        val friends = it.get("friends") as? List<String> ?: listOf()
+                                        if (!friends.contains(uid)) {
+                                            db.collection("Users")
+                                                .document(uid)
+                                                .update("friends", FieldValue.arrayUnion(FirebaseAuth.getInstance().currentUser?.uid.toString()))
+                                                .addOnSuccessListener {
+                                                    Toast.makeText(
+                                                        this,
+                                                        "Friend added successfully!",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            FirebaseFirestore.getInstance().collection("Users")
+                                                .document(uid)
+                                                .get().addOnSuccessListener {
+                                                    val loans =
+                                                        it.get("Loans") as? Map<String, String>
+                                                            ?: mapOf()
+                                                    val updatedLoans = HashMap(loans)
+
+                                                    updatedLoans.putAll(mapOf(FirebaseAuth.getInstance().currentUser?.uid.toString() to "-1"))
+                                                    FirebaseFirestore.getInstance()
+                                                        .collection("Users")
+                                                        .document(uid)
+                                                        .update("Loans", updatedLoans)
+                                                        .addOnSuccessListener {
+
+                                                        }
+                                                }
+                                        }
                                     }
                                 }
                             }

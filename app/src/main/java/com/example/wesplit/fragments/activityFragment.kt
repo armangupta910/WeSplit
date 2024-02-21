@@ -41,6 +41,7 @@ class activityFragment : Fragment() {
                 }
                     // Convert and sort the entries by date-time in descending order
 //                data.sortBy { it.keys.first() }
+                Log.d(TAG,"Data: ${data}")
                     val x = frag.findViewById<RecyclerView>(R.id.recyclerActivity)
                     val y = adaptorforexpenses(data)
                     x.layoutManager = LinearLayoutManager(activity,
