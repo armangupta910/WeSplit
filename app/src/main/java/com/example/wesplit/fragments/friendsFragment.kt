@@ -53,6 +53,7 @@ class friendsFragment() : Fragment() {
                     // Store the friends list in the variable
                     friendsList = friends
                     val x = frag.findViewById<RecyclerView>(R.id.recyclerFriends)
+
                     val y = adaptorforfriendslist(friendsList)
                     x.layoutManager = LinearLayoutManager(activity,
                         LinearLayoutManager.VERTICAL,false)

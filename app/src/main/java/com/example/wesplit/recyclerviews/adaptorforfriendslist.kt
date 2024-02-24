@@ -1,15 +1,18 @@
 package com.example.wesplit.recyclerviews
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wesplit.R
+import com.example.wesplit.activities.expense_details_activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context

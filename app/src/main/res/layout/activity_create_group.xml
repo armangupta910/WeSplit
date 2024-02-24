@@ -99,7 +99,7 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Couple" />
+            android:text="Friends" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/trip"
@@ -140,7 +140,7 @@
         android:id="@+id/friendsAutoCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter friend's name" />
+        android:hint="Enter participant's name" />
 
     <com.google.android.material.chip.ChipGroup
         android:layout_marginLeft="20dp"

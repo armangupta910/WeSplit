@@ -123,7 +123,8 @@ class add_expense_activity : AppCompatActivity() {
 
                     var otherData:HashMap<String,String> = hashMapOf(
                         "Description" to findViewById<EditText>(R.id.description).text.toString(),
-                        "Note" to findViewById<EditText>(R.id.note).text.toString()
+                        "Note" to findViewById<EditText>(R.id.note).text.toString(),
+                        "Amount" to  findViewById<EditText>(R.id.amount).text.toString()
                     )
 
                     data.add(paidby)

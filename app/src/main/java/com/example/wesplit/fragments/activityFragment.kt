@@ -1,6 +1,7 @@
 package com.example.wesplit.fragments
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -40,12 +41,11 @@ class activityFragment : Fragment() {
                     data.add(demo)
                 }
                     // Convert and sort the entries by date-time in descending order
-//                data.sortBy { it.keys.first() }
+                data.sortByDescending { it.keys.first() }
                 Log.d(TAG,"Data: ${data}")
                     val x = frag.findViewById<RecyclerView>(R.id.recyclerActivity)
-                    val y = adaptorforexpenses(data)
-                    x.layoutManager = LinearLayoutManager(activity,
-                        LinearLayoutManager.VERTICAL,false)
+                    val y = context?.let { adaptorforexpenses(it,data) }
+                    x.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
                     x.adapter = y
 
             } else {

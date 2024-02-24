@@ -2,32 +2,43 @@ package com.example.wesplit.recyclerviews
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wesplit.R
+import com.example.wesplit.activities.expense_details_activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
+//import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
 
-class adaptorforexpenses(val data:MutableList<HashMap<String,MutableList<HashMap<String,String>>>>):RecyclerView.Adapter<adaptorforexpenses.view_holder>() {
+class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,MutableList<HashMap<String,String>>>>):RecyclerView.Adapter<adaptorforexpenses.view_holder>() {
     class view_holder(itemView: View):RecyclerView.ViewHolder(itemView){
         val name:TextView = itemView.findViewById(R.id.expenseName)
-        val paidBy:TextView = itemView.findViewById(R.id.paidBy)
         val date:TextView = itemView.findViewById(R.id.date)
         val month:TextView = itemView.findViewById(R.id.month)
-        val oweorowed:TextView = itemView.findViewById(R.id.oweorowed)
         val amount:TextView = itemView.findViewById(R.id.amount)
+        val time:TextView = itemView.findViewById(R.id.time)
+        val card:LinearLayout = itemView.findViewById(R.id.card)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): view_holder {
@@ -43,23 +54,89 @@ class adaptorforexpenses(val data:MutableList<HashMap<String,MutableList<HashMap
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: view_holder, position: Int) {
 
-        holder.name.setText(data[position].values.first()[2]["Description"])
+        val uid = data[position].values.first()[0]["Paid by"]
+        if(uid.toString() == FirebaseAuth.getInstance().currentUser?.uid.toString()){
+//            Toast.makeText(conti,"Ghusa",Toast.LENGTH_SHORT).show()
+//            val text1 = "You added "
+//            val text2 = data[position].values.first()[2]["Description"].toString()
+//            val finalText = text1 + "'${text2}'"
+//            Log.d(TAG,"Text1: ${text1} Text2: ${text2} Final: ${finalText}")
+//            holder.name.setText(finalText)
+
+            val fullText = "You added '${data[position].values.first()[2]["Description"]}'"
+
+            // Create a SpannableStringBuilder
+            val spannableString = SpannableStringBuilder(fullText)
+
+            // Apply normal style to "added"
+            val addedIndex = fullText.indexOf("added")
+            if (addedIndex != -1) {
+                spannableString.setSpan(
+                    StyleSpan(Typeface.NORMAL), // Apply normal style
+                    addedIndex,
+                    addedIndex + "added".length,
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
+// Assuming the rest of the text should be bold by default as per your requirement
+// If not, you can apply bold style to specific parts using a similar approach with StyleSpan(Typeface.BOLD)
+
+// Set the SpannableString to the TextView
+            holder.name.setText(spannableString)
+        }
+        else {
+            FirebaseFirestore.getInstance().collection("Users").document(uid.toString()).get()
+                .addOnSuccessListener {
+
+//                    holder.name.setText("${it.get("name")} added '" + "${data[position].values.first()[2]["Description"]}'")
+                    val name = it.get("name").toString()
+                    val description = data[position].values.first()[2]["Description"].toString()
+
+                    // Construct the full text
+                    val fullText = "$name added '${description}'"
+
+                    // Create a SpannableStringBuilder from the full text
+                    val spannableString = SpannableStringBuilder(fullText)
+
+                    // Find the start index of "added"
+                    val addedIndex = fullText.indexOf("added")
+                    if (addedIndex != -1) {
+                        // Apply a normal style span to "added"
+                        spannableString.setSpan(
+                            StyleSpan(Typeface.NORMAL), // Apply normal style
+                            addedIndex,
+                            addedIndex + "added".length,
+                            SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+
+// Set the SpannableString to the TextView
+                    holder.name.text = spannableString
+                }
+        }
 
         FirebaseFirestore.getInstance().collection("Users").document(data[position].values.first()[0]["Paid by"].toString()).get().addOnSuccessListener {
             if(it.data?.get("name") == null){
                 Log.d(TAG,"Yeh NULL hai: ${it.id.toString()}")
             }
-            holder.paidBy.setText("Paid by: " + it.data?.get("name"))
         }
 
         val dateTimeKey = data[position].keys.first()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val dateTime = LocalDateTime.parse(dateTimeKey, formatter)
 
+        val timing = DateTimeFormatter.ofPattern("HH:mm")
+
+        val time = dateTime.toLocalTime().format(timing)
+        holder.time.setText(time)
+        holder.time.setTextColor(Color.BLACK)
+
+
         val dayOfMonth = dateTime.dayOfMonth.toString()
         val monthName = dateTime.month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
 
-        holder.date.setText(dayOfMonth)
+        holder.date.setText(" " + dayOfMonth)
         holder.month.setText(monthName)
 
         // Assuming 'currentUserUid' is the UID of the current user
@@ -80,34 +157,97 @@ class adaptorforexpenses(val data:MutableList<HashMap<String,MutableList<HashMap
             if (balance > 0) {
                 // Current user is owed money
                 Log.d(TAG,"${data[position].values.first()[2]["Description"]},You are owed: $balance")
-                holder.oweorowed.setText("Lent")
-                holder.amount.setText("₹ " + balance.toString())
+//                holder.amount.setText("You lent " + "₹ " + balance.toString())
+
+                val fullText = "You lent " + "₹ " + balance.toString()
+                val spannableString = SpannableStringBuilder(fullText)
+
+                // Find the start and end indexes of the part you want to color
+                val startIndex = fullText.indexOf("₹")
+                val endIndex = startIndex + balance.toString().length + 2
+
+                // Set the color to the specific part of the text
+                spannableString.setSpan(
+                    ForegroundColorSpan(ContextCompat.getColor(conti, R.color.green1)), // Set your desired color here
+                    startIndex,
+                    endIndex,
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                holder.amount.setText(spannableString)
+
             } else if (balance < 0) {
                 // Current user owes money (unlikely scenario if current user paid)
                 Log.d(TAG,"${data[position].values.first()[2]["Description"]},You owe: ${-balance}")
-                holder.oweorowed.setText("Borrowed")
-                holder.amount.setText("₹ " + (-balance).toString())
-                holder.amount.setTextColor(Color.RED)
+//                holder.oweorowed.setText("Borrowed")
+//                holder.amount.setText("You borrowed " + "₹ " + (-balance).toString())
+
+                val fullText = "You borrowed " + "₹ " + (-balance).toString()
+                val spannableString = SpannableStringBuilder(fullText)
+
+                // Find the start and end indexes of the part you want to color
+                val startIndex = fullText.indexOf("₹")
+                val endIndex = startIndex + balance.toString().length + 2
+
+                // Set the color to the specific part of the text
+                spannableString.setSpan(
+                    ForegroundColorSpan(ContextCompat.getColor(conti, R.color.red)), // Set your desired color here
+                    startIndex,
+                    endIndex,
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                holder.amount.setText(spannableString)
             } else {
                 // Balanced, no money owed either way
                 Log.d(TAG,"${data[position].values.first()[2]["Description"]},All settled")
-                holder.oweorowed.setText("Settled")
-                holder.amount.setText("₹ 0.00")
+//                holder.oweorowed.setText("Settled")
+                holder.amount.setText("Settled")
+
             }
         } else {
             // Someone else paid for the expense, check if current user owes them
             if (currentUserShare > 0) {
                 Log.d(TAG,"${data[position].values.first()[2]["Description"]},You owe: $currentUserShare")
-                holder.oweorowed.setText("Borrowed")
-                holder.amount.setText("₹ " + currentUserShare.toString())
-                holder.amount.setTextColor(Color.RED)
+//                holder.oweorowed.setText("Borrowed")
+//                holder.amount.setText("You borrowed " + "₹ " + currentUserShare.toString())
+//                holder.amount.setTextColor(Color.RED)
+
+                val fullText = "You borrowed " + "₹ " + currentUserShare.toString()
+                val spannableString = SpannableStringBuilder(fullText)
+
+                // Find the start and end indexes of the part you want to color
+                val startIndex = fullText.indexOf("₹")
+                val endIndex = startIndex + currentUserShare.toString().length + 2
+
+                // Set the color to the specific part of the text
+                spannableString.setSpan(
+                    ForegroundColorSpan(ContextCompat.getColor(conti, R.color.red)), // Set your desired color here
+                    startIndex,
+                    endIndex,
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                holder.amount.setText(spannableString)
+
+
             } else {
                 // Current user did not participate or owes nothing
                 Log.d(TAG,"${data[position].values.first()[2]["Description"]},You do not owe anything")
             }
         }
 
+        holder.card.setOnClickListener {
+            val intent = Intent(conti,expense_details_activity::class.java)
+            intent.putExtra("key",data[position].keys.first())
+//            intent.putExtra("amount",data[position].values.first()[2]["Amount"])
+            intent.putExtra("name",data[position].values.first()[2]["Description"])
+            intent.putExtra("paidby",data[position].values.first()[0]["Paid by"])
+            intent.putExtra("split",data[position].values.first()[1])
+            intent.putExtra("note",data[position].values.first()[2]["Note"])
+            conti.startActivity(intent)
 
+        }
     }
 
 
