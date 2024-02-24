@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wesplit.R
 import com.example.wesplit.activities.expense_details_activity
+import com.example.wesplit.activities.friend_expense_details_activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
@@ -25,6 +26,7 @@ class adaptorforfriendslist(private val listioffriends:MutableList<String>):Recy
         val email:TextView = itemView.findViewById(R.id.email)
         val oweorlent:TextView = itemView.findViewById(R.id.oweorlent)
         val amount:TextView = itemView.findViewById(R.id.amount)
+        val friend:LinearLayout = itemView.findViewById(R.id.friend)
 
     }
 
@@ -52,6 +54,12 @@ class adaptorforfriendslist(private val listioffriends:MutableList<String>):Recy
                 val email = documentSnapshot.getString("email")
                 holder.name.setText(name.toString())
                 holder.email.setText(email.toString())
+
+                holder.friend.setOnClickListener {
+                    val intent = Intent(holder.itemView.context,friend_expense_details_activity::class.java)
+                    intent.putExtra("friendUID",userId)
+                    holder.itemView.context.startActivity(intent)
+                }
             } else {
                 // Handle the case where the document does not exist
                 println("No such document!")
@@ -84,6 +92,9 @@ class adaptorforfriendslist(private val listioffriends:MutableList<String>):Recy
                 holder.amount.setText("₹ " + price.toString())
 
             }
+        }
+        holder.friend.setOnClickListener {
+
         }
 
     }

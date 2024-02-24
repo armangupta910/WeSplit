@@ -19,9 +19,12 @@
         android:theme="@style/Theme.WeSplit"
         tools:targetApi="31">
         <activity
-            android:name=".activities.expense_details_activity"
-            android:hardwareAccelerated="false"
+            android:name=".activities.friend_expense_details_activity"
             android:exported="false" />
+        <activity
+            android:name=".activities.expense_details_activity"
+            android:exported="false"
+            android:hardwareAccelerated="false" />
         <activity
             android:name=".activities.group_activity"
             android:exported="false" />

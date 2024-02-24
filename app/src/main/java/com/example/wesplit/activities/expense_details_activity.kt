@@ -42,7 +42,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class expense_details_activity : AppCompatActivity() {
+class expense_details_activity() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expense_details)
@@ -54,7 +54,8 @@ class expense_details_activity : AppCompatActivity() {
         val split = intent.getSerializableExtra("split") as HashMap<String,String>
 
         findViewById<ImageView>(R.id.goback).setOnClickListener {
-            startActivity(Intent(this,MainActivity::class.java))
+                startActivity(Intent(this,MainActivity::class.java))
+
         }
 
         Log.d(TAG,"DateTime: ${dateTime}")
