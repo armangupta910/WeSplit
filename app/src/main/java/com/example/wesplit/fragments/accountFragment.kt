@@ -29,6 +29,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
 import java.io.FileOutputStream
 import android.provider.Settings
+import com.example.wesplit.activities.sign_in_activity
 import java.io.IOException
 import java.io.OutputStream
 
@@ -111,11 +112,32 @@ class accountFragment : Fragment() {
             }
         }
 
+        frag.findViewById<TextView>(R.id.signout).setOnClickListener {
+            val shared = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
+            val edit = shared.edit()
+            edit.putString("data", "")
+            edit.apply()
+
+            // Sign out the Firebase user
+            FirebaseAuth.getInstance().signOut()
+
+            // Start sign-in activity. Make sure the context is correct.
+            // You might need to adjust this depending on your navigation setup.
+            // For example, if using NavController for navigation component.
+            val intent = Intent(requireActivity(), sign_in_activity::class.java)
+            startActivity(intent)
+
+            // Close the current activity if this fragment is tied to it
+            // Note: Be cautious with this call, as it will close the entire activity hosting this fragment.
+            // If you're using a single-activity architecture with multiple fragments, consider using
+            // the navigation component to navigate back instead.
+            requireActivity().finish()
+        }
+
 
 
         return frag
     }
-
     private fun showCustomDialog() {
         // Context is required, hence use requireContext() to get the context
         val dialog = Dialog(requireContext())

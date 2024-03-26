@@ -3,17 +3,25 @@ package com.example.wesplit.recyclerviews
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -39,6 +47,7 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
         val amount:TextView = itemView.findViewById(R.id.amount)
         val time:TextView = itemView.findViewById(R.id.time)
         val card:LinearLayout = itemView.findViewById(R.id.card)
+        val money:ImageView = itemView.findViewById(R.id.money)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): view_holder {
@@ -49,6 +58,56 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
 
     override fun getItemCount(): Int {
         return data.size
+    }
+
+    fun createAmountDrawableWithColors(context: Context, amount: String, widthInDp: Int, heightInDp: Int, textColor: Int, bgColor: Int): Drawable? {
+        val metrics = context.resources.displayMetrics
+
+        // Convert dp dimensions to pixels
+        val widthPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, widthInDp.toFloat(), metrics).toInt()
+        val heightPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInDp.toFloat(), metrics).toInt()
+
+        // Initialize a Bitmap and Canvas to draw
+        val bitmap = Bitmap.createBitmap(widthPx, heightPx, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        // Set the background color
+        bitmap.eraseColor(bgColor) // This will fill the bitmap with the background color
+
+        // Initialize a Paint object for drawing the text
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = textColor
+            // Start with a default text size; adjust below
+            textSize = heightPx.toFloat() * 0.4f
+        }
+
+        // Measure text and adjust text size to fit within the specified dimensions
+        val textBounds = Rect()
+        paint.getTextBounds(amount, 0, amount.length, textBounds)
+        val textWidth = textBounds.width()
+        val textHeight = textBounds.height()
+
+        // Adjust text size based on the actual width
+        if (textWidth > widthPx || textHeight > heightPx) {
+            val widthRatio = widthPx.toFloat() / textWidth.toFloat()
+            val heightRatio = heightPx.toFloat() / textHeight.toFloat()
+            val ratio = minOf(widthRatio, heightRatio)
+
+            paint.textSize = paint.textSize * ratio * 0.9f // Scale down a bit more for padding
+        }
+
+        // Re-measure with new size
+        paint.getTextBounds(amount, 0, amount.length, textBounds)
+
+        // Calculate the position to center the text
+        val x = widthPx / 2f - textBounds.width() / 2f - textBounds.left
+        val y = heightPx / 2f + textBounds.height() / 2f - textBounds.bottom
+
+        // Draw the text on the canvas
+        canvas.drawText(amount, x, y, paint)
+
+        // Return the bitmap as a Drawable
+        return BitmapDrawable(context.resources, bitmap)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -154,6 +213,8 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
             val totalContribution = expenseDetails[1].values.sumOf { it.toDoubleOrNull() ?: 0.0 } //Total Kharcha
             val balance = totalContribution - expenseAmount // Pay krne wale(Khud user) ne kitna zyada Pay kiya?
 
+//            holder.money.setImageDrawable(createAmountDrawableWithColors(conti,balance.toInt().toString(),40,40,ContextCompat.getColor(conti,R.color.white),ContextCompat.getColor(conti,R.color.green1)))
+
             if (balance > 0) {
                 // Current user is owed money
                 Log.d(TAG,"${data[position].values.first()[2]["Description"]},You are owed: $balance")
@@ -161,6 +222,8 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
 
                 val fullText = "You lent " + "₹ " + balance.toString()
                 val spannableString = SpannableStringBuilder(fullText)
+
+                holder.money.setImageDrawable(createAmountDrawableWithColors(conti,balance.toInt().toString(),20,20,ContextCompat.getColor(conti,R.color.white),ContextCompat.getColor(conti,R.color.green1)))
 
                 // Find the start and end indexes of the part you want to color
                 val startIndex = fullText.indexOf("₹")
@@ -185,6 +248,8 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
                 val fullText = "You borrowed " + "₹ " + (-balance).toString()
                 val spannableString = SpannableStringBuilder(fullText)
 
+                holder.money.setImageDrawable(createAmountDrawableWithColors(conti,((-1)*balance).toInt().toString(),20,20,ContextCompat.getColor(conti,R.color.white),ContextCompat.getColor(conti,R.color.green1)))
+
                 // Find the start and end indexes of the part you want to color
                 val startIndex = fullText.indexOf("₹")
                 val endIndex = startIndex + balance.toString().length + 2
@@ -203,6 +268,7 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
                 Log.d(TAG,"${data[position].values.first()[2]["Description"]},All settled")
 //                holder.oweorowed.setText("Settled")
                 holder.amount.setText("Settled")
+                holder.money.setImageDrawable(createAmountDrawableWithColors(conti,balance.toInt().toString(),20,20,ContextCompat.getColor(conti,R.color.white),ContextCompat.getColor(conti,R.color.black)))
 
             }
         } else {
@@ -215,6 +281,8 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
 
                 val fullText = "You borrowed " + "₹ " + currentUserShare.toString()
                 val spannableString = SpannableStringBuilder(fullText)
+
+                holder.money.setImageDrawable(createAmountDrawableWithColors(conti,currentUserShare.toInt().toString(),40,40,ContextCompat.getColor(conti,R.color.white),ContextCompat.getColor(conti,R.color.red)))
 
                 // Find the start and end indexes of the part you want to color
                 val startIndex = fullText.indexOf("₹")

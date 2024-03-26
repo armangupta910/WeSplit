@@ -22,8 +22,8 @@
             >
             <ImageButton
                 android:id="@+id/goBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/back_button"
                 android:background="@color/green1"
                 android:layout_gravity="center_vertical"
@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add a friend"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:layout_gravity="center_vertical"
@@ -60,7 +60,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/bg_button"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:padding="10dp"/>
 
     <LinearLayout
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Scan QR"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/bg_button"/>
 
@@ -86,7 +86,7 @@
             android:layout_marginLeft="20dp"
             android:background="@drawable/bg_button"
             android:text="Check"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
     </LinearLayout>
 
     <TextView

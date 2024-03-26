@@ -36,12 +36,14 @@ class groupsFragment : Fragment() {
             val groups:MutableList<String> = it.get("groups") as MutableList<String>
             for(i in groups){
                 if(i!="") {
-
                     FirebaseFirestore.getInstance().collection("Groups").document(i).get()
                         .addOnSuccessListener {
-                            data.add(it.data as HashMap<String, Any>)
+                            val demodata = it.data as HashMap<String,Any>
+                            demodata["key"] = i.toString()
+                            data.add(demodata)
+
                             val x = frag.findViewById<RecyclerView>(R.id.recyclerGroups)
-                            val y = adaptorForGroupsFragment(data)
+                            val y = adaptorForGroupsFragment(requireContext(),data)
                             x.layoutManager =
                                 LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
                             x.adapter = y

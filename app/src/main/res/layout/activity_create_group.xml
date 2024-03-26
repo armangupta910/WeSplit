@@ -19,15 +19,16 @@
 
             >
             <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/back_button"
                 android:background="@color/green1"
                 android:id="@+id/backAddExpenseFragment"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:text="Create a group"
                 android:gravity="start"
                 android:textColor="@color/black"
@@ -38,8 +39,9 @@
 
 
             <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/check_image"
                 android:background="@color/green1"
                 android:id="@+id/checkAddGroup"/>
@@ -57,20 +59,20 @@
         android:layout_marginTop="40dp"
         >
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:src="@drawable/profile_image"/>
         <EditText
             android:id="@+id/groupName"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="45dp"
             android:hint="Group name"/>
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:text="Type"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
@@ -124,7 +126,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:text="Participants"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
@@ -135,11 +137,11 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:padding="10dp"
         android:drawableStart="@drawable/search_image"
         android:id="@+id/friendsAutoCompleteTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+
         android:hint="Enter participant's name" />
 
     <com.google.android.material.chip.ChipGroup

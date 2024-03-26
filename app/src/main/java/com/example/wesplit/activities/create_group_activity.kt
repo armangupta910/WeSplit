@@ -105,11 +105,19 @@ class create_group_activity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.checkAddGroup).setOnClickListener {
             Log.d(TAG,"Type: ${type} Friends: ${selectedFriendsUids}")
             selectedFriendsUids.add(FirebaseAuth.getInstance().currentUser?.uid.toString())
+
+            val loans:HashMap<String,String> = hashMapOf()
+            for(i in selectedFriendsUids){
+                loans[i] = "0"
+            }
+
             val documentName = generateRandomKey()
             val group = hashMapOf(
                 "Name" to findViewById<EditText>(R.id.groupName).text.toString(),
                 "Type" to type,
-                "Participants" to selectedFriendsUids
+                "Participants" to selectedFriendsUids,
+                "Expenses" to hashMapOf<String,MutableList<HashMap<String,String>>>(),
+                "Loans" to loans
             )
             FirebaseFirestore.getInstance().collection("Groups").document(documentName).set(group).addOnSuccessListener {
                 Toast.makeText(this,"Group added",Toast.LENGTH_SHORT).show()
@@ -153,6 +161,8 @@ class create_group_activity : AppCompatActivity() {
 
         setupAutoCompleteTextView()
     }
+
+
 
     private fun setupAutoCompleteTextView() {
         friendsAutoCompleteTextView.setOnItemClickListener { adapterView, _, position, _ ->

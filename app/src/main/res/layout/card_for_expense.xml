@@ -34,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Feb"
-                    android:textSize="15dp"/>
+                    android:textSize="10dp"/>
 
                 <TextView
                     android:layout_gravity="center_horizontal"
@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="18"
-                    android:textSize="15dp" />
+                    android:textSize="10dp" />
             </LinearLayout>
 
             <TextView
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="18"
-                android:textSize="15dp"/>
+                android:textSize="10dp"/>
         </LinearLayout>
         <View
             android:layout_width="1dp"
@@ -62,7 +62,8 @@
         <ImageView
             android:padding="5dp"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:id="@+id/money"
+            android:layout_height="45dp"
             android:layout_weight="1.5"
             android:src="@drawable/money_image"
             />
@@ -85,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Expense Name"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textStyle="bold" />
@@ -97,7 +98,7 @@
                 android:layout_marginTop="0dp"
                 android:text="Paid by"
                 android:textColor="@color/black"
-                android:textSize="15dp"
+                android:textSize="14dp"
                 android:textStyle="normal" />
 
 <!--            <TextView-->

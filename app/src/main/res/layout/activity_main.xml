@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="WeSplit"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:textStyle="bold"
             android:gravity="center"
             android:layout_gravity="center_vertical"
@@ -31,7 +31,16 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:text="Sign Out"
+            android:visibility="gone"
             android:id="@+id/signout"/>
+
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/share" />
     </androidx.cardview.widget.CardView>
 
     <androidx.fragment.app.FragmentContainerView
@@ -51,8 +60,9 @@
             android:id="@+id/createNewGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start a new group"
+            android:text="  Start a new group"
             android:layout_marginTop="0dp"
+            android:textSize="10dp"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
             android:background="@drawable/bg_button"
@@ -61,7 +71,8 @@
             android:id="@+id/addExpense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Expense"
+            android:text=" Add Expense"
+            android:textSize="10dp"
             android:layout_marginTop="0dp"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
@@ -71,11 +82,11 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/green2"/>
+        android:background="@color/black"/>
     <androidx.cardview.widget.CardView
         android:id="@+id/navBar"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/white">
 
         <LinearLayout
@@ -101,7 +112,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:text="Groups" />
             </LinearLayout>
 
@@ -121,7 +132,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:text="Friends" />
             </LinearLayout>
             <LinearLayout
@@ -140,7 +151,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:text="Activity" />
             </LinearLayout>
             <LinearLayout
@@ -159,7 +170,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:text="Account" />
             </LinearLayout>
 

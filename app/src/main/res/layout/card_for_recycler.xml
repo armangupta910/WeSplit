@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:layout_marginTop="10dp"
 
+    android:id="@+id/card"
+
     android:layout_marginBottom="10dp">
     <LinearLayout
         android:layout_marginLeft="10dp"
@@ -13,9 +15,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
-            android:padding="5dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:id="@+id/image"
+            android:padding="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="7dp"
             android:src="@drawable/money_image"
             />
         <LinearLayout
@@ -27,7 +32,7 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:text="Canteen Guys"
                 android:textStyle="bold"/>
             <TextView
@@ -35,7 +40,7 @@
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="13dp"
                 android:text="Type: "
                 android:textStyle="normal"/>
             <TextView
@@ -43,7 +48,7 @@
                 android:textColor="@color/green1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15dp"
+                android:textSize="13dp"
                 android:text="You owe Soumen K. ₹168.00"
                 android:textStyle="normal"/>
         </LinearLayout>

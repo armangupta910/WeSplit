@@ -20,8 +20,9 @@
 
             >
             <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_height="30dp"
                 android:src="@drawable/back_button"
                 android:background="@color/green1"
                 android:id="@+id/goback"/>
@@ -29,7 +30,7 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:text="Expense Name"
                 android:gravity="start"
                 android:textColor="@color/black"
@@ -39,16 +40,16 @@
                 android:textStyle="bold"/>
 
             <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/share"
                 android:background="@color/green1"
                 android:id="@+id/share"/>
 
 
             <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/delete"
                 android:background="@color/green1"
                 android:id="@+id/delete"/>
@@ -72,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Amount: "
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:textStyle="bold"/>
@@ -85,8 +86,8 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:id="@+id/image"
             android:src="@drawable/profile_image"/>
 
@@ -109,7 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Original Split: "
-        android:textSize="25dp"
+        android:textSize="15dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:textStyle="bold"/>

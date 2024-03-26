@@ -1,8 +1,14 @@
 package com.example.wesplit.activities
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -27,10 +33,12 @@ import android.widget.PopupWindow
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import com.example.wesplit.DataCallback
 import com.example.wesplit.MainActivity
 import com.example.wesplit.R
+import com.example.wesplit.dropdown
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
@@ -390,13 +398,22 @@ class add_expense_activity : AppCompatActivity() {
         autoCompleteTextView.setOnItemClickListener { adapterView, view, position, id ->
             val selectedItem = adapterView.getItemAtPosition(position) as String
             handleFriendSelection(selectedItem)
+            autoCompleteTextView.setText("")
         }
     }
 
     private fun filterFriendsByName(queryText: String) {
         // Filter the friends' names based on the input query text
-        val filteredFriendsNames = friendsNametoUID.keys.filter { it.contains(queryText, ignoreCase = true) }
-        updateAutoCompleteTextView(filteredFriendsNames)
+        Log.d(TAG,"Friends Names to UID: $friendsNametoUID")
+
+        var currUsername:String = ""
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+            currUsername = it.data?.get("name") as String
+
+            var filteredFriendsNames = friendsNametoUID.keys.filter { it.contains(queryText, ignoreCase = true) && it != currUsername}
+            updateAutoCompleteTextView(filteredFriendsNames)
+
+        }
     }
 
     private fun handleFriendSelection(selectedItem: String) {
@@ -413,10 +430,50 @@ class add_expense_activity : AppCompatActivity() {
         }
     }
 
+    fun createLetterDrawable(context: Context, name: String): BitmapDrawable {
+        val width = 100
+        val height = 100
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        // Background Color from Resource
+        val paint = Paint()
+        paint.color = ContextCompat.getColor(context, R.color.green1) // Use your color resource here
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+        // Text settings
+        paint.color = Color.WHITE
+        paint.textSize = 50f
+        paint.typeface = Typeface.DEFAULT_BOLD
+        paint.textAlign = Paint.Align.CENTER
+
+        // Calculate the positions
+        val xPos = canvas.width / 2
+        val yPos = (canvas.height / 2 - (paint.descent() + paint.ascent()) / 2).toInt()
+
+        // Extracting initials
+        val words = name.split(" ")
+        val initials = if (words.isNotEmpty()) {
+            val firstInitial = words.first().firstOrNull()?.toUpperCase() ?: '?'
+            val lastInitial = if (words.size > 1) words.last().firstOrNull()?.toUpperCase() ?: '?' else firstInitial
+            "$firstInitial$lastInitial"
+        } else {
+            "?"
+        }
+
+        // Draw the initials on the Bitmap
+        canvas.drawText(initials, xPos.toFloat(), yPos.toFloat(), paint)
+
+        // Return a Drawable
+        return BitmapDrawable(context.resources, bitmap)
+    }
+
     private fun addChipForSelectedFriend(friendName: String, friendUID: String) {
         val chipGroup = findViewById<ChipGroup>(R.id.chip_group) // Make sure you have a ChipGroup in your layout
         val chip = Chip(this).apply {
             text = friendName
+            chipIcon = createLetterDrawable(this@add_expense_activity,friendName)
             isCloseIconVisible = true
             setOnCloseIconClickListener {
                 chipGroup.removeView(this)
@@ -574,7 +631,7 @@ class add_expense_activity : AppCompatActivity() {
 //    }
 
     private fun updateAutoCompleteTextView(friendsNames: List<String>) {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, friendsNames)
+        val adapter = dropdown(this, friendsNames)
         autoCompleteTextView.setAdapter(adapter)
         adapter.notifyDataSetChanged()
     }

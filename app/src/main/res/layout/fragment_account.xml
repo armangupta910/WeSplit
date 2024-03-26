@@ -23,7 +23,7 @@
             android:layout_marginTop="10dp"
             android:text="Account"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -36,8 +36,8 @@
             <ImageView
                 android:scaleType="centerCrop"
                 android:id="@+id/prfileImage"
-                android:layout_width="80dp"
-                android:layout_height="80dp" />
+                android:layout_width="35dp"
+                android:layout_height="35dp" />
 
             <LinearLayout
                 android:layout_gravity="center"
@@ -54,7 +54,7 @@
                     android:ellipsize="end"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="20dp" />
+                    android:textSize="15dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -75,18 +75,18 @@
             android:background="@color/green1"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="10dp" />
 
         <LinearLayout
             android:id="@+id/getQR"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/qr_image"/>
             <LinearLayout
                 android:layout_gravity="center"
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:text="Get QR Code"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                      />
 
             </LinearLayout>
@@ -114,8 +114,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/message_image"/>
             <LinearLayout
                 android:layout_gravity="center"
@@ -127,9 +127,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Device and push notifications settings"
+                    android:text="Notifications settings"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                   />
             </LinearLayout>
         </LinearLayout>
@@ -149,8 +149,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/rate"/>
             <LinearLayout
                 android:layout_gravity="center"
@@ -164,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:text="Rate WeSplit"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
            />
             </LinearLayout>
         </LinearLayout>
@@ -177,8 +177,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/support_image"/>
             <LinearLayout
                 android:layout_gravity="center"
@@ -192,7 +192,7 @@
                     android:layout_height="wrap_content"
                     android:text="Contact WeSPlit support"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                />
             </LinearLayout>
         </LinearLayout>
@@ -205,14 +205,14 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp" />
         <LinearLayout
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/sign_out_image"/>
             <LinearLayout
                 android:layout_gravity="center"
@@ -222,15 +222,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/signout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Sign Out"
                     android:textColor="@color/green1"
-                    android:textSize="25dp"
+                    android:textSize="15dp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
         <ImageView
+
             android:layout_gravity="center"
             android:layout_width="250dp"
             android:layout_height="250dp"

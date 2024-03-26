@@ -16,7 +16,8 @@
         android:layout_height="255dp"
         android:id="@+id/imageView2"
         android:scaleType="fitXY"
-        android:src="@drawable/logo"
+        android:src="@drawable/person"
+        android:foregroundTint="@color/green1"
         android:adjustViewBounds="false"/>
     <LinearLayout
         android:layout_marginTop="30dp"

@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.groupsFragment"
+    tools:context=".fragments.groupsFragment">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/parent"
     android:gravity="top">
@@ -30,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
-                android:text="Add expense"
+                android:text="Add group expense"
                 android:gravity="start"
                 android:textColor="@color/black"
                 android:layout_marginLeft="10dp"
@@ -45,7 +50,7 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/check_image"
                 android:background="@color/green1"
-                android:id="@+id/checkAddExpense"/>
+                android:id="@+id/submit"/>
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -69,25 +74,23 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textStyle="bold"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <AutoCompleteTextView
-            android:id="@+id/searchBox"
-            android:textSize="15dp"
-            android:padding="10dp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:drawableStart="@drawable/search_image"
-            android:layout_width="0dp"
-            android:layout_weight="8"
-            android:layout_height="wrap_content"
-            android:hint="Find Friends"
-            android:background="@drawable/bg_button"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="10dp"/>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal">-->
+<!--        <AutoCompleteTextView-->
+<!--            android:id="@+id/searchBox"-->
+<!--            android:textSize="20dp"-->
+<!--            android:padding="10dp"-->
+<!--            android:drawableStart="@drawable/search_image"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="8"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Find Friends"-->
+<!--            android:background="@drawable/bg_button"-->
+<!--            android:layout_marginLeft="40dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_marginTop="10dp"/>-->
 
 <!--        <TextView-->
 <!--            android:id="@+id/goForSearch"-->
@@ -101,18 +104,18 @@
 <!--            android:text="Go"-->
 <!--            android:background="@drawable/bg_button"/>-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
-<!--    <TextView-->
-<!--        android:id="@+id/friends"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="With you and: "-->
-<!--        android:textSize="20dp"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:layout_marginLeft="10dp"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:textStyle="bold"/>-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/friends"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="With you and: "-->
+    <!--        android:textSize="20dp"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:layout_marginLeft="10dp"-->
+    <!--        android:layout_marginTop="10dp"-->
+    <!--        android:textStyle="bold"/>-->
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chip_group"
@@ -157,7 +160,7 @@
             android:id="@+id/amount"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:inputType="numberDecimal"
+
             android:hint="0.00"/>
     </LinearLayout>
     <LinearLayout
@@ -212,7 +215,7 @@
                 android:id="@+id/paidby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select the Payer"
+                android:text="you"
                 android:textSize="15sp"
                 android:textColor="@color/green1"
                 android:textStyle="bold"
@@ -246,7 +249,7 @@
                 android:id="@+id/equallyorunequally"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Mode of Split"
+                android:text="equally"
                 android:textSize="15sp"
                 android:textColor="@color/green1"
                 android:textStyle="bold"
@@ -269,4 +272,6 @@
 
 
 
+
 </LinearLayout>
+</ScrollView>

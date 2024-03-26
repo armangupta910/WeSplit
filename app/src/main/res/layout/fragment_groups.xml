@@ -33,13 +33,15 @@
                 android:textColorHint="@color/black"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="0dp"
+                android:textSize="15dp"
                 android:background="@drawable/bg_button"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"/>
             <ImageButton
 
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/search_image"
                 android:background="@color/green1"
                 android:id="@+id/searchGroupsFragment"/>
@@ -67,7 +69,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="Overall, you owe ₹ 0.00"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:layout_weight="8"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
@@ -83,7 +85,7 @@
                 android:id="@+id/filterFragmentGroups"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
-                android:textSize="20dp"
+                android:textSize="15dp"
                 android:textColor="@color/green1"
                 android:layout_marginRight="10dp"
                 android:clickable="true"
