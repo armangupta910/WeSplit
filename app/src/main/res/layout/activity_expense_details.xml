@@ -85,11 +85,12 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:id="@+id/image"
             android:src="@drawable/profile_image"/>
+
 
         <TextView
             android:id="@+id/paidby"

@@ -20,7 +20,7 @@
             android:gravity="center"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/white"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
@@ -36,8 +36,8 @@
 
         <ImageView
             android:id="@+id/share"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="end|center_vertical"
             android:layout_marginRight="15dp"
             android:src="@drawable/share" />
@@ -81,13 +81,13 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/black"/>
+        android:layout_height="1dp"
+        android:background="@color/green1"/>
     <androidx.cardview.widget.CardView
         android:id="@+id/navBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/white">
+        app:cardBackgroundColor="@color/green1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,7 +96,7 @@
             android:layout_gravity="center"
             android:gravity="center">
             <LinearLayout
-                android:background="@color/creme"
+                android:background="@color/white"
                 android:id="@+id/navGroups"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -106,10 +106,14 @@
                 android:padding="8dp">
 
                 <ImageView
+                    android:id="@+id/groupsimage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:src="@drawable/add_group" />
                 <TextView
+                    android:id="@+id/groupstext"
+                    android:textColor="@color/green1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -126,10 +130,14 @@
                 android:padding="8dp">
 
                 <ImageView
+                    android:id="@+id/friendsimage"
                     android:layout_width="wrap_content"
+                    android:background="@color/white"
                     android:layout_height="wrap_content"
                     android:src="@drawable/person_image" />
                 <TextView
+                    android:id="@+id/friendstext"
+                    android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -145,10 +153,14 @@
                 android:padding="8dp">
 
                 <ImageView
+                    android:id="@+id/activityimage"
+                    android:background="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/activity_image" />
                 <TextView
+                    android:id="@+id/activitytext"
+                    android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
@@ -164,10 +176,14 @@
                 android:padding="8dp">
 
                 <ImageView
+                    android:id="@+id/accountimage"
                     android:layout_width="wrap_content"
+                    android:background="@color/white"
                     android:layout_height="wrap_content"
                     android:src="@drawable/account_image" />
                 <TextView
+                    android:id="@+id/accounttext"
+                    android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15dp"

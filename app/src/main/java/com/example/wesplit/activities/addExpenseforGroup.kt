@@ -149,6 +149,7 @@ class addExpenseforGroup : AppCompatActivity() {
 
                     Log.d(TAG,"Expense Details: ${expense}")
 
+
                     for(i in participantsNamesMap){
                         FirebaseFirestore.getInstance().collection("Users").document(i.value).get().addOnSuccessListener {
                             val demodata:HashMap<String,MutableList<HashMap<String,String>>> = it.data?.get("Expenses") as HashMap<String, MutableList<HashMap<String, String>>>
@@ -170,9 +171,28 @@ class addExpenseforGroup : AppCompatActivity() {
                         FirebaseFirestore.getInstance().collection("Groups").document(groupID).update("Expenses",oldexpenses).addOnSuccessListener {
                             Toast.makeText(applicationContext,"Added",Toast.LENGTH_SHORT).show()
                         }
+
+                        var Loans:HashMap<String,String> = hashi1
+                        Loans = it.data?.get("Loans") as HashMap<String, String>
+
+                        participantsNamesMap[paidBy]
+                        var totalSum:Int = 0
+                        for(i in hashi2){
+                            totalSum += i.value.toInt()
+                            if(i.key != participantsNamesMap[paidBy]){
+                                val curramount:Int = Loans[i.key]?.toInt()!!
+                                Loans[i.key] = (curramount - i.value.toInt()).toString()
+
+                            }
+                        }
+                        val currAmount:Int = Loans[participantsNamesMap[paidBy].toString()]?.toInt()!!
+                        Loans[participantsNamesMap[paidBy].toString()] = (currAmount + totalSum - hashi2[participantsNamesMap[paidBy]]?.toInt()!!).toString()
+
+                        FirebaseFirestore.getInstance().collection("Groups").document(groupID).update("Loans",Loans)
+
                     }
 
-                    hashi1["Paid by"]?.let { it1 -> updateLoans(it1,hashi2) }
+//                    hashi1["Paid by"]?.let { it1 -> updateLoans(it1,hashi2) }
 
 
                 }

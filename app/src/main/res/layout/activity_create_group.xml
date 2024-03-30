@@ -58,14 +58,17 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="40dp"
         >
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/groupImage"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@drawable/profile_image"/>
+            android:src="@drawable/add_group"/>
+
         <EditText
             android:id="@+id/groupName"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:layout_marginLeft="10dp"
             android:hint="Group name"/>
     </LinearLayout>
 
@@ -140,7 +143,7 @@
         android:drawableStart="@drawable/search_image"
         android:id="@+id/friendsAutoCompleteTextView"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
 
         android:hint="Enter participant's name" />
 

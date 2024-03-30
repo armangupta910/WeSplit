@@ -29,6 +29,8 @@ import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
 import java.io.FileOutputStream
 import android.provider.Settings
+import android.widget.ProgressBar
+import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.activities.sign_in_activity
 import java.io.IOException
 import java.io.OutputStream
@@ -49,16 +51,25 @@ class accountFragment : Fragment() {
             showCustomDialog()
         }
 
-        val profileImage:ImageView = frag.findViewById<ImageView>(R.id.prfileImage)
+        val profileImage:ImageView = frag.findViewById<ImageView>(R.id.profileImage)
         val imageURL = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
         Glide.with(requireContext())
             .load(imageURL)
             .apply(RequestOptions().placeholder(R.drawable.person_image).error(R.drawable.person_image))
             .into(profileImage)
+
+        frag.findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
         frag.findViewById<TextView>(R.id.email).setText(FirebaseAuth.getInstance().currentUser?.email.toString())
         FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
             frag.findViewById<TextView>(R.id.name).setText(it.get("name").toString())
+
+            frag.findViewById<LottieAnimationView>(R.id.lottieprogi).visibility = View.GONE
+            frag.findViewById<TextView>(R.id.email).visibility = View.VISIBLE
+            frag.findViewById<TextView>(R.id.name).visibility = View.VISIBLE
+
         }
+
+
         val noti = frag.findViewById<LinearLayout>(R.id.notificationsettings)
         noti.setOnClickListener {
             // Create an Intent that opens the notification settings for your app
@@ -126,6 +137,7 @@ class accountFragment : Fragment() {
             // For example, if using NavController for navigation component.
             val intent = Intent(requireActivity(), sign_in_activity::class.java)
             startActivity(intent)
+
 
             // Close the current activity if this fragment is tied to it
             // Note: Be cautious with this call, as it will close the entire activity hosting this fragment.

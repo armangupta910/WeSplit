@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import com.example.wesplit.MainActivity
 import com.example.wesplit.R
@@ -33,27 +34,27 @@ class sign_in_activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-        token=getSharedPreferences("data", Context.MODE_PRIVATE)
-        if(token.getString("data","")!=""){
-            val userUid = FirebaseAuth.getInstance().currentUser!!.uid.toString()
-
-            val db = FirebaseFirestore.getInstance()
-            db.collection("Users").get().addOnSuccessListener {
-                for(i in it){
-                    if(i.id.toString() == userUid){
-                        ref = false
-                        startActivity(Intent(this,MainActivity::class.java))
-                        finish()
-                    }
-                }
-                if(ref == true){
-                    startActivity(Intent(this,getting_details_activity::class.java))
-                }
-            }.addOnFailureListener {
-                Toast.makeText(this,"Could not search",Toast.LENGTH_SHORT).show()
-            }
-        }
-        val butt:Button = findViewById(R.id.googleSignIn)
+//        token=getSharedPreferences("data", Context.MODE_PRIVATE)
+//        if(token.getString("data","")!=""){
+//            val userUid = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+//
+//            val db = FirebaseFirestore.getInstance()
+//            db.collection("Users").get().addOnSuccessListener {
+//                for(i in it){
+//                    if(i.id.toString() == userUid){
+//                        ref = false
+//                        startActivity(Intent(this,MainActivity::class.java))
+//                        finish()
+//                    }
+//                }
+//                if(ref == true){
+//                    startActivity(Intent(this,getting_details_activity::class.java))
+//                }
+//            }.addOnFailureListener {
+//                Toast.makeText(this,"Could not search",Toast.LENGTH_SHORT).show()
+//            }
+//        }
+        val butt:ImageView = findViewById(R.id.googleSignIn)
 
         FirebaseApp.initializeApp(this)
 
@@ -106,11 +107,13 @@ class sign_in_activity : AppCompatActivity() {
                         if(i.id.toString() == userUid){
                             ref = false
                             startActivity(Intent(this,MainActivity::class.java))
+                            overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
                             finish()
                         }
                     }
                     if(ref == true){
                         startActivity(Intent(this,getting_details_activity::class.java))
+                        overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
                     }
                 }.addOnFailureListener {
                     Toast.makeText(this,"Could not search",Toast.LENGTH_SHORT).show()

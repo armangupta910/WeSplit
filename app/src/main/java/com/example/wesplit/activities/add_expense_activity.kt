@@ -94,6 +94,7 @@ class add_expense_activity : AppCompatActivity() {
             Log.d(TAG,"2: ${UIDtoFriendsname}")
             findViewById<ImageButton>(R.id.backAddExpenseFragment).setOnClickListener {
                 startActivity(Intent(this,MainActivity::class.java))
+                overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
                 finish()
             }
             autoCompleteTextView = findViewById(R.id.searchBox)
@@ -178,6 +179,7 @@ class add_expense_activity : AppCompatActivity() {
                 }
                 Toast.makeText(this,"Expenditure added",Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this,MainActivity::class.java))
+                overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
                 finish()
             }
         }

@@ -22,6 +22,7 @@ class getting_details_activity : AppCompatActivity() {
         button1.setOnClickListener {
             startActivity(Intent(this,sign_in_activity::class.java))
             finish()
+            overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
         }
         findViewById<EditText>(R.id.email).setText(FirebaseAuth.getInstance().currentUser?.email.toString())
         findViewById<EditText>(R.id.email).isEnabled = false
@@ -39,6 +40,7 @@ class getting_details_activity : AppCompatActivity() {
             Toast.makeText(this,"You're registered. Happy splitting",Toast.LENGTH_SHORT).show()
 
             startActivity(Intent(this,MainActivity::class.java))
+            overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
             finish()
 
         }

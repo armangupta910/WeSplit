@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 app:layout_collapseMode="parallax">
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/toolbarImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -96,6 +96,7 @@
                         android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
                     <ImageButton
+                        android:layout_marginRight="10dp"
                         android:id="@+id/action_icon_one"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -103,16 +104,16 @@
                         android:background="?attr/selectableItemBackground"
                         android:src="@drawable/share" />
 
-                    <ImageButton
+<!--                    <ImageButton-->
 
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="15dp"
-                        android:id="@+id/action_icon_two"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="?attr/selectableItemBackground"
-                        android:src="@drawable/delete" />
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginRight="15dp"-->
+<!--                        android:id="@+id/action_icon_two"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_gravity="center_vertical"-->
+<!--                        android:background="?attr/selectableItemBackground"-->
+<!--                        android:src="@drawable/delete" />-->
 
                 </LinearLayout>
 
@@ -149,7 +150,7 @@
                 android:layout_marginRight="20dp"
                 android:orientation="horizontal">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -179,15 +180,15 @@
                 android:textColor="@color/black"
                 android:textSize="15dp" />
 
-            <TextView
+<!--            <TextView-->
 
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:text="Lent or Borrowed"
-                android:textColor="@color/black"
-                android:textSize="15dp" />
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:text="Lent or Borrowed"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="15dp" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"

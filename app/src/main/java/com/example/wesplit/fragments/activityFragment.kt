@@ -48,6 +48,7 @@ class activityFragment : Fragment() {
                     x.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
                     x.adapter = y
 
+
             } else {
                 println("Document does not exist")
             }

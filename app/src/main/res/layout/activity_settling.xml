@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/person1"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -88,7 +88,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/right" />
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/person2"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -124,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-               <ImageView
+               <de.hdodenhof.circleimageview.CircleImageView
                    android:layout_width="40dp"
                    android:layout_height="40dp"
                    android:src="@drawable/money_image"/>

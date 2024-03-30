@@ -55,6 +55,7 @@ class expense_details_activity() : AppCompatActivity() {
 
         findViewById<ImageView>(R.id.goback).setOnClickListener {
                 startActivity(Intent(this,MainActivity::class.java))
+            overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
 
         }
 

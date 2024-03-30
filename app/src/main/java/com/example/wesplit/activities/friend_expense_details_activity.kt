@@ -144,6 +144,7 @@ class friend_expense_details_activity : AppCompatActivity() {
                                 intent.putExtra("friendUID",friendUID)
                                 intent.putExtra("amount", demo.toString())
                                 startActivity(intent)
+                                overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
 
 
 

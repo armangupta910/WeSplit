@@ -85,6 +85,7 @@ class add_friend_activity : AppCompatActivity() {
 
         findViewById<ImageButton>(R.id.goBack).setOnClickListener {
             startActivity(Intent(this,MainActivity::class.java))
+            overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
             finish()
         }
 

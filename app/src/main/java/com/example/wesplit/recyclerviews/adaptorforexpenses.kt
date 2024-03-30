@@ -12,6 +12,8 @@ import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -23,15 +25,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.R
 import com.example.wesplit.activities.expense_details_activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -48,6 +53,8 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
         val time:TextView = itemView.findViewById(R.id.time)
         val card:LinearLayout = itemView.findViewById(R.id.card)
         val money:ImageView = itemView.findViewById(R.id.money)
+        val progi:CircularProgressBar = itemView.findViewById(R.id.progressBar)
+        val heheprogi:LottieAnimationView = itemView.findViewById(R.id.lottieprogi)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): view_holder {
@@ -112,6 +119,10 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: view_holder, position: Int) {
+
+//        holder.card.visibility = View.GONE
+
+        holder.heheprogi.playAnimation()
 
         val uid = data[position].values.first()[0]["Paid by"]
         if(uid.toString() == FirebaseAuth.getInstance().currentUser?.uid.toString()){
@@ -299,6 +310,7 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
                 holder.amount.setText(spannableString)
 
 
+
             } else {
                 // Current user did not participate or owes nothing
                 Log.d(TAG,"${data[position].values.first()[2]["Description"]},You do not owe anything")
@@ -314,8 +326,23 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
             intent.putExtra("split",data[position].values.first()[1])
             intent.putExtra("note",data[position].values.first()[2]["Note"])
             conti.startActivity(intent)
-
         }
+
+
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            holder.progi.visibility = View.GONE
+
+            holder.name.visibility = View.VISIBLE
+            holder.amount.visibility = View.VISIBLE
+            holder.heheprogi.visibility = View.GONE
+        }, 500) // Delay of 1 second
+
+        holder.card.visibility = View.VISIBLE
+
+
+
     }
 
 

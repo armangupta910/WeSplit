@@ -10,19 +10,24 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.media.Image
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.R
 import com.example.wesplit.activities.expense_details_activity
 import com.example.wesplit.activities.friend_expense_details_activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mikhaellopez.circularprogressbar.CircularProgressBar
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 import kotlin.math.abs
 
@@ -35,6 +40,11 @@ class adaptorforfriendslist(val conext:Context,private val listioffriends:Mutabl
         val amount:TextView = itemView.findViewById(R.id.amount)
         val friend:LinearLayout = itemView.findViewById(R.id.friend)
         val image:ImageView = itemView.findViewById(R.id.profileimage)
+
+        val progi:CircularProgressBar = itemView.findViewById(R.id.progressBar)
+        val lotti1:LottieAnimationView = itemView.findViewById(R.id.lottieprogi1)
+        val lotti2:LottieAnimationView = itemView.findViewById(R.id.lottieprogi2)
+
 
     }
 
@@ -105,6 +115,23 @@ class adaptorforfriendslist(val conext:Context,private val listioffriends:Mutabl
 
             }
         }
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            holder.progi.visibility = View.GONE
+
+            holder.name.visibility = View.VISIBLE
+            holder.email.visibility = View.VISIBLE
+            holder.oweorlent.visibility = View.VISIBLE
+            holder.amount.visibility = View.VISIBLE
+
+            holder.progi.visibility = View.GONE
+            holder.lotti1.visibility = View.GONE
+            holder.lotti2.visibility = View.GONE
+
+        }, 500) // Delay of 1 second
+
+
         holder.friend.setOnClickListener {
 
         }
