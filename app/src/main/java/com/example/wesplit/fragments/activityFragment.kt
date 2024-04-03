@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.R
 import com.example.wesplit.recyclerviews.adaptorforexpenses
 import com.example.wesplit.recyclerviews.adaptorforfriendslist
@@ -27,7 +30,7 @@ class activityFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val frag = inflater.inflate(R.layout.fragment_activity, container, false)
-
+        val scaleAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.button_scale)
         val db = FirebaseFirestore.getInstance()
         val userDocumentRef = db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString())
 
@@ -35,6 +38,11 @@ class activityFragment : Fragment() {
             if (document.exists()) {
                 val expensesField:HashMap<String, MutableList<HashMap<String, String>>> = document.get("Expenses") as HashMap<String, MutableList<HashMap<String, String>>>
                 val data:MutableList<HashMap<String, MutableList<HashMap<String, String>>>> = mutableListOf()
+
+                if(expensesField.size == 0){
+                    frag.findViewById<TextView>(R.id.text).visibility = View.VISIBLE
+                    frag.findViewById<LottieAnimationView>(R.id.empty).visibility = View.VISIBLE
+                }
                 for(i in expensesField){
                     var demo:HashMap<String, MutableList<HashMap<String, String>>> = hashMapOf()
                     demo[i.key] = i.value
@@ -47,6 +55,8 @@ class activityFragment : Fragment() {
                     val y = context?.let { adaptorforexpenses(it,data) }
                     x.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL,false)
                     x.adapter = y
+
+                    frag.findViewById<LottieAnimationView>(R.id.lottieprogi).visibility = View.GONE
 
 
             } else {

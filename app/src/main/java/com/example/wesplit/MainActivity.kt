@@ -171,17 +171,23 @@ package com.example.wesplit
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
 import com.example.wesplit.activities.add_expense_activity
 import com.example.wesplit.activities.create_group_activity
+import com.example.wesplit.activities.notifications
 import com.example.wesplit.activities.sign_in_activity
 import com.example.wesplit.fragments.accountFragment
 import com.example.wesplit.fragments.activityFragment
@@ -190,9 +196,48 @@ import com.example.wesplit.fragments.groupsFragment
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
+
+    fun dpToPx(dp: Int, context: Context): Float {
+        return dp * context.resources.displayMetrics.density
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        findViewById<ImageView>(R.id.notification).setOnClickListener {
+            startActivity(Intent(this,notifications::class.java))
+        }
+
+        val slideOutView = findViewById<LinearLayout>(R.id.specialButtons)
+        val triggerView = findViewById<CardView>(R.id.arrowButton)
+        val visibleWidthPx = dpToPx(50, this)
+
+        slideOutView.post {
+            val viewWidthPx = slideOutView.width.toFloat()
+            val initialTranslation = viewWidthPx - visibleWidthPx
+            slideOutView.translationX = initialTranslation
+
+            var isPanelShown = false
+
+            triggerView.setOnClickListener {
+                if (isPanelShown) {
+                    // Slide in (hide)
+                    slideOutView.animate()
+                        .translationX(initialTranslation)
+                        .setDuration(300)
+                        .start()
+                } else {
+                    // Slide out (show)
+                    slideOutView.animate()
+                        .translationX(0f)
+                        .setDuration(300)
+                        .start()
+                }
+                isPanelShown = !isPanelShown
+            }
+        }
+
 
         val token=getSharedPreferences("data", Context.MODE_PRIVATE)
         val editor=token.edit()
@@ -216,6 +261,23 @@ class MainActivity : AppCompatActivity() {
         val friendstext:TextView = findViewById(R.id.friendstext)
         val activitytext:TextView = findViewById(R.id.activitytext)
         val accounttext:TextView = findViewById(R.id.accounttext)
+
+        findViewById<ImageView>(R.id.share).setOnClickListener {
+            val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
+            findViewById<ImageView>(R.id.share).startAnimation(scaleAnimation)
+            val message:String = "\uD83C\uDF1F Exciting News! \uD83C\uDF1F I found an app that makes splitting expenses super easy for friends & groups - no more headaches over who owes what! Let’s give it a try for our next outing. Download it and let me know what you think! \uD83D\uDCF1\uD83D\uDCB8"
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, message)
+                type = "text/plain"
+                // Ensure the package is targeted to WhatsApp
+                setPackage("com.whatsapp")
+            }
+
+// Attempt to launch WhatsApp
+            startActivity(sendIntent)
+
+        }
 
         groups.setOnClickListener {
             groups.setBackgroundColor(ContextCompat.getColor(this,R.color.white))
@@ -280,13 +342,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         val addExpense = findViewById<Button>(R.id.addExpense)
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
         addExpense.setOnClickListener {
+            findViewById<Button>(R.id.addExpense).startAnimation(scaleAnimation)
             startActivity(Intent(this,add_expense_activity::class.java))
             overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
 
         }
 
         val createGroup = findViewById<Button>(R.id.createNewGroup).setOnClickListener {
+            findViewById<Button>(R.id.createNewGroup).startAnimation(scaleAnimation)
             startActivity(Intent(this,create_group_activity::class.java))
             overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
         }

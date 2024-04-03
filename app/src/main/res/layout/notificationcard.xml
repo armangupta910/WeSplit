@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:id="@+id/card"
+    android:paddingBottom="5dp"
+    android:layout_margin="5dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Friend Request"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"/>
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="9"
+            android:src="@drawable/person_image"
+            android:text="Friend Request"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_weight="7.5"
+        android:layout_width="0dp"
+        android:paddingBottom="5dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:gravity="center_horizontal"
+            android:textSize="13dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieprogi"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_fileName="lottieprogi2.json"
+            android:layout_gravity="center_vertical|center_horizontal" />
+
+
+        <LinearLayout
+            android:paddingBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/reject"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:textStyle="bold"
+                android:text="Reject"
+                android:textSize="13dp"
+                android:layout_weight="1"
+                android:padding="0dp"
+                android:textColor="@color/black"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_button"
+                android:layout_marginRight="10dp"
+                />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/accept"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:textStyle="bold"
+                android:padding="0dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_button_filled"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:text="Accept"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

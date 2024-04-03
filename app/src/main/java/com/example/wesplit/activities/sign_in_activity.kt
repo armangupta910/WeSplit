@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -31,9 +32,13 @@ class sign_in_activity : AppCompatActivity() {
     var ref = true
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var token: SharedPreferences
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 //        token=getSharedPreferences("data", Context.MODE_PRIVATE)
 //        if(token.getString("data","")!=""){
 //            val userUid = FirebaseAuth.getInstance().currentUser!!.uid.toString()
@@ -69,6 +74,7 @@ class sign_in_activity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         butt.setOnClickListener { view: View? ->
+            view?.startAnimation(scaleAnimation)
             Toast.makeText(this, "Logging In", Toast.LENGTH_SHORT).show()
             signInGoogle()
         }

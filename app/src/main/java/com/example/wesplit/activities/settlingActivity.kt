@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -29,9 +30,13 @@ import org.w3c.dom.Text
 class settlingActivity : AppCompatActivity() {
     var friendUID:String = ""
     var amount:String = ""
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settling)
+
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 
         friendUID = intent.getStringExtra("friendUID") as String
         amount = intent.getStringExtra("amount") as String
@@ -51,6 +56,8 @@ class settlingActivity : AppCompatActivity() {
         }
 
         findViewById<ImageButton>(R.id.settle).setOnClickListener {
+
+            it.startAnimation(scaleAnimation)
 
             findViewById<ImageButton>(R.id.settle).visibility = View.GONE
             findViewById<ProgressBar>(R.id.progress).visibility = View.VISIBLE

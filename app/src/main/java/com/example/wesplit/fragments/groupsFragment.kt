@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
 import android.widget.PopupMenu
@@ -39,6 +40,7 @@ class groupsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val frag = inflater.inflate(R.layout.fragment_groups, container, false)
+        val scaleAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.button_scale)
 
         autoCompleteGroups = frag.findViewById<AutoCompleteTextView>(R.id.autoCompleteGroups)
 
@@ -73,6 +75,10 @@ class groupsFragment : Fragment() {
 
         FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
             val groups:MutableList<String> = it.get("groups") as MutableList<String>
+            if(groups.size == 0){
+                frag.findViewById<TextView>(R.id.text).visibility = View.VISIBLE
+                frag.findViewById<LottieAnimationView>(R.id.empty).visibility = View.VISIBLE
+            }
             for(i in groups){
                 if(i!="") {
                     FirebaseFirestore.getInstance().collection("Groups").document(i).get()
@@ -89,6 +95,9 @@ class groupsFragment : Fragment() {
                         }
                 }
             }
+
+            frag.findViewById<LottieAnimationView>(R.id.lottieprogi2).visibility = View.GONE
+            frag.findViewById<RecyclerView>(R.id.recyclerGroups).visibility = View.VISIBLE
         }
 
 //        val x = frag.findViewById<RecyclerView>(R.id.recyclerGroups)
@@ -98,6 +107,8 @@ class groupsFragment : Fragment() {
 
         val filter = frag.findViewById<TextView>(R.id.filterFragmentGroups)
         filter.setOnClickListener { view->
+
+            filter.startAnimation(scaleAnimation)
             showPopupMenu(view)
         }
 

@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -47,11 +48,15 @@ import java.io.FileWriter
 
 class friend_expense_details_activity : AppCompatActivity() {
 
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_friend_expense_details)
+
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -120,6 +125,7 @@ class friend_expense_details_activity : AppCompatActivity() {
 //                        findViewById<Button>(R.id.settle).visibility = View.GONE
                         }
                         findViewById<Button>(R.id.settle).setOnClickListener {
+                            it.startAnimation(scaleAnimation)
                             if (amount > 0) {
                                 Toast.makeText(
                                     this,
@@ -156,6 +162,7 @@ class friend_expense_details_activity : AppCompatActivity() {
                             }
                         }
                         findViewById<Button>(R.id.remind).setOnClickListener {
+                            it.startAnimation(scaleAnimation)
                             if (amount > 0) {
                                 val text: String =
                                     "Hi there, you've ₹${amount} to settle up with me. Please pay me back as soon as possible. Thank You. (This message has been sent using WeSplit App) You can use this Link to pay me back upi://pay?pa=guptaarman910-1@oksbi&pn=Armaan%20Gupta&am=${amount}&cu=INR\n"
@@ -222,6 +229,7 @@ class friend_expense_details_activity : AppCompatActivity() {
 
                 val exportCsvButton: Button = findViewById(R.id.export)
                 exportCsvButton.setOnClickListener {
+                    it.startAnimation(scaleAnimation)
                     // If permissions are not granted, the request flow is started,
                     // and the outcome will be handled in onRequestPermissionsResult()
                 }

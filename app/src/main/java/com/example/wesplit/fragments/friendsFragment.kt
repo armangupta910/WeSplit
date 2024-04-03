@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -17,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.R
 import com.example.wesplit.activities.add_friend_activity
 import com.example.wesplit.activities.friend_expense_details_activity
@@ -41,9 +43,10 @@ class friendsFragment() : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val frag =  inflater.inflate(R.layout.fragment_friends, container, false)
-
+        val scaleAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.button_scale)
         val imagebutt = frag.findViewById<Button>(R.id.addFriendFloatingButton)
         imagebutt.setOnClickListener {
+            imagebutt.startAnimation(scaleAnimation)
             startActivity(Intent(activity,add_friend_activity::class.java))
         }
 
@@ -61,6 +64,10 @@ class friendsFragment() : Fragment() {
             if (document != null && document.exists()) {
                 // Extract the friends array from the document
                 val friends = document.get("friends") as? MutableList<String>
+                if(friends?.size == 0){
+                    frag.findViewById<TextView>(R.id.text).visibility = View.VISIBLE
+                    frag.findViewById<LottieAnimationView>(R.id.empty).visibility = View.VISIBLE
+                }
                 if (friends != null) {
                     // Store the friends list in the variable
                     friendsList = friends
@@ -70,6 +77,9 @@ class friendsFragment() : Fragment() {
                     x.layoutManager = LinearLayoutManager(activity,
                         LinearLayoutManager.VERTICAL,false)
                     x.adapter = y
+
+                    frag.findViewById<LottieAnimationView>(R.id.lottieprogi).visibility = View.GONE
+                    frag.findViewById<RecyclerView>(R.id.recyclerFriends).visibility = View.VISIBLE
 
                     // Do something with the friends list here, such as updating the UI
                 } else {

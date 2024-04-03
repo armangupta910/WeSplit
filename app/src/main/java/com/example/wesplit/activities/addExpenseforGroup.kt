@@ -12,6 +12,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -46,10 +47,14 @@ class addExpenseforGroup : AppCompatActivity() {
 
     var namestoUID:Map<String,String> = mapOf()
 
+//    val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expensefor_group)
+
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 
         groupID = intent.getStringExtra("key").toString()
 
@@ -58,6 +63,8 @@ class addExpenseforGroup : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun fetchParticipantNames() {
+
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
         lifecycleScope.launch {
             val participantsNamesMap = mutableMapOf<String, String>()
             try {
@@ -89,18 +96,23 @@ class addExpenseforGroup : AppCompatActivity() {
                 //Adding Chips to the Group
                 addNamesAsChips(participantsNamesMap)
 
+
+
                 //Pop Up Menu for Paid By
                 findViewById<TextView>(R.id.paidby).setOnClickListener { view ->
+                    view.startAnimation(scaleAnimation)
                     showPopupMenu1(view,participantsNamesMap)
                 }
 
                 //Pop Up Menu for Equally or Unequally
                 findViewById<TextView>(R.id.equallyorunequally).setOnClickListener { view ->
+                    view.startAnimation(scaleAnimation)
                     showPopupMenu2(view,participantsNamesMap)
                 }
 
                 findViewById<ImageButton>(R.id.submit).setOnClickListener {
                     Log.d(TAG,"Split: $equallyorunequally")
+                    it.startAnimation(scaleAnimation)
                     Log.d(TAG,"Splitting: $namestoAmounts")
 
                     Toast.makeText(applicationContext,"Paid by: $paidBy",Toast.LENGTH_SHORT).show()

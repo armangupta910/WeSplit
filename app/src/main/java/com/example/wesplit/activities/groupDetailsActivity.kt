@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,9 +29,13 @@ import org.w3c.dom.Text
 
 class groupDetailsActivity : AppCompatActivity() {
     var groupID:String = ""
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_details)
+
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 
         groupID = intent.getStringExtra("key").toString()
 
@@ -42,6 +47,7 @@ class groupDetailsActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance().collection("Groups").document(groupID).get().addOnSuccessListener {
 
             findViewById<Button>(R.id.settle).setOnClickListener {it1->
+                it1.startAnimation(scaleAnimation)
                 friend = it.data?.get("Participants") as MutableList<String>
 
                 friend.remove(FirebaseAuth.getInstance().currentUser?.uid.toString())
@@ -64,6 +70,7 @@ class groupDetailsActivity : AppCompatActivity() {
 
 
             findViewById<Button>(R.id.remind).setOnClickListener {it1 ->
+                it1.startAnimation(scaleAnimation)
 
                 val participants:MutableList<String> = it.data?.get("Participants") as MutableList<String>
 
@@ -130,6 +137,7 @@ class groupDetailsActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.addExpenseFloatingButton).setOnClickListener {
+            it.startAnimation(scaleAnimation)
             val intent = Intent(this, addExpenseforGroup::class.java)
 
             // Pass any data you need to the new activity here

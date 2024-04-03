@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -31,6 +32,47 @@ import com.google.zxing.integration.android.IntentIntegrator
 class add_friend_activity : AppCompatActivity() {
 
     var finaluid:String = ""
+
+    fun updateNotificationField(data:String) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+            val friends:MutableList<String> = it.data?.get("friends") as MutableList<String>
+            if(friends.contains(data)){
+                Toast.makeText(this,"Friend already added!",Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
+            }
+        }
+        val userDocRef = db.collection("Users").document(data)
+
+        // Current timestamp as the key
+        val currentTimestamp = System.currentTimeMillis().toString()
+
+        // Constructing the string to add
+        val valueToAdd:String = "1 " + FirebaseAuth.getInstance().currentUser?.uid.toString() + " " + data
+
+        // Prepare the update using a HashMap
+        val updateMap = hashMapOf<String, String>(
+            currentTimestamp to valueToAdd
+        )
+
+        // Update the document
+        userDocRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                val notifications = documentSnapshot.get("Notification") as? HashMap<String, String> ?: hashMapOf()
+                notifications.putAll(updateMap)
+                userDocRef.update("Notification", notifications)
+                    .addOnSuccessListener {
+                        println("DocumentSnapshot successfully updated!")
+                    }
+                    .addOnFailureListener { e ->
+                        println("Error updating document: $e")
+                    }
+            } else {
+                println("No such document!")
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_friend)
@@ -42,11 +84,16 @@ class add_friend_activity : AppCompatActivity() {
         val add:Button = findViewById(R.id.add)
         val phone:TextView = findViewById(R.id.phone)
 
+
+        val scaleAnimation1 = AnimationUtils.loadAnimation(this,R.anim.button_scale)
         add.setOnClickListener {
-            addFriend(finaluid)
+            it.startAnimation(scaleAnimation1)
+            updateNotificationField(finaluid)
+//            addFriend(finaluid)
         }
 
         check.setOnClickListener {
+            it.startAnimation(scaleAnimation1)
             val uid = findViewById<EditText>(R.id.uid).text.toString()
             if(uid == ""){
                 Toast.makeText(this,"Please enter an UID!",Toast.LENGTH_SHORT).show()
@@ -82,8 +129,10 @@ class add_friend_activity : AppCompatActivity() {
                 }
             }
         }
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 
         findViewById<ImageButton>(R.id.goBack).setOnClickListener {
+            it.startAnimation(scaleAnimation)
             startActivity(Intent(this,MainActivity::class.java))
             overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
             finish()
@@ -91,6 +140,7 @@ class add_friend_activity : AppCompatActivity() {
 
         val scan:Button = findViewById(R.id.scan)
         scan.setOnClickListener {
+            it.startAnimation(scaleAnimation)
             startScanner()
         }
 

@@ -17,6 +17,7 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
@@ -49,6 +50,8 @@ class create_group_activity : AppCompatActivity() {
     private lateinit var groupNameEditText: EditText
     private val handler = Handler(Looper.getMainLooper())
     private var runnable: Runnable? = null
+
+//    val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 
 
 
@@ -106,6 +109,7 @@ class create_group_activity : AppCompatActivity() {
 
 
         homeChip.setOnClickListener {
+//            it.startAnimation(scaleAnimation)
             homeChip.isChecked = true
             tripChip.isChecked = false
             coupleChip.isChecked = false
@@ -115,6 +119,7 @@ class create_group_activity : AppCompatActivity() {
         }
 
         tripChip.setOnClickListener {
+//            it.startAnimation(scaleAnimation)
             homeChip.isChecked = false
             tripChip.isChecked = true
             coupleChip.isChecked = false
@@ -124,6 +129,7 @@ class create_group_activity : AppCompatActivity() {
         }
 
         coupleChip.setOnClickListener {
+//            it.startAnimation(scaleAnimation)
             homeChip.isChecked = false
             tripChip.isChecked = false
             coupleChip.isChecked = true
@@ -133,6 +139,7 @@ class create_group_activity : AppCompatActivity() {
         }
 
         othersChip.setOnClickListener {
+//            it.startAnimation(scaleAnimation)
             homeChip.isChecked = false
             tripChip.isChecked = false
             coupleChip.isChecked = false
@@ -142,6 +149,7 @@ class create_group_activity : AppCompatActivity() {
         }
 
         findViewById<ImageButton>(R.id.backAddExpenseFragment).setOnClickListener {
+//            it.startAnimation(scaleAnimation)
             startActivity(Intent(this,MainActivity::class.java))
             overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
             finish()
@@ -150,6 +158,7 @@ class create_group_activity : AppCompatActivity() {
 
 
         findViewById<ImageButton>(R.id.checkAddGroup).setOnClickListener {
+//            it.startAnimation(scaleAnimation)
             Log.d(TAG,"Type: ${type} Friends: ${selectedFriendsUids}")
             selectedFriendsUids.add(FirebaseAuth.getInstance().currentUser?.uid.toString())
 

@@ -29,6 +29,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
 import java.io.FileOutputStream
 import android.provider.Settings
+import android.view.animation.AnimationUtils
 import android.widget.ProgressBar
 import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.activities.sign_in_activity
@@ -38,6 +39,8 @@ import java.io.OutputStream
 
 class accountFragment : Fragment() {
 
+//    val scaleAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.button_scale)
+
     private lateinit var qrCodeBitmap:Bitmap
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,8 +49,11 @@ class accountFragment : Fragment() {
         // Inflate the layout for this fragment
         val frag =  inflater.inflate(R.layout.fragment_account, container, false)
 
+        val scaleAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.button_scale)
+
         val getQR:LinearLayout = frag.findViewById(R.id.getQR)
         getQR.setOnClickListener {
+            frag.findViewById<TextView>(R.id.text1).startAnimation(scaleAnimation)
             showCustomDialog()
         }
 
@@ -72,6 +78,7 @@ class accountFragment : Fragment() {
 
         val noti = frag.findViewById<LinearLayout>(R.id.notificationsettings)
         noti.setOnClickListener {
+            frag.findViewById<TextView>(R.id.text2).startAnimation(scaleAnimation)
             // Create an Intent that opens the notification settings for your app
             val intent = Intent().apply {
                 when {
@@ -99,6 +106,7 @@ class accountFragment : Fragment() {
         val contact = frag.findViewById<LinearLayout>(R.id.contact)
         // Assuming this code is inside an Activity or a Fragment. If it's in a Fragment, use requireContext() instead of this for the context.
         contact.setOnClickListener {
+            frag.findViewById<TextView>(R.id.text3).startAnimation(scaleAnimation)
             val recipientEmail = "wesplit2226@gmail.com" // The email address you want to send to
             val subject = "Contact Support"
             val body = ""
@@ -124,6 +132,7 @@ class accountFragment : Fragment() {
         }
 
         frag.findViewById<TextView>(R.id.signout).setOnClickListener {
+            frag.findViewById<TextView>(R.id.signout).startAnimation(scaleAnimation)
             val shared = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
             val edit = shared.edit()
             edit.putString("data", "")
@@ -151,6 +160,8 @@ class accountFragment : Fragment() {
         return frag
     }
     private fun showCustomDialog() {
+
+        val scaleAnimation = AnimationUtils.loadAnimation(requireContext(),R.anim.button_scale)
         // Context is required, hence use requireContext() to get the context
         val dialog = Dialog(requireContext())
 
@@ -167,6 +178,7 @@ class accountFragment : Fragment() {
 
         // Set button click listener or other logic
         dialog.findViewById<Button>(R.id.share).setOnClickListener {
+            dialog.findViewById<Button>(R.id.share).startAnimation(scaleAnimation)
             val qrCodeBitmap = generateQRCode(FirebaseAuth.getInstance().currentUser?.uid.toString())
             val fileName = "qrCode.png" // You can use any name, just ensure it's unique
             val fileUri = saveBitmapToFile(requireContext(), qrCodeBitmap!!, fileName)

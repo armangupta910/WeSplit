@@ -122,8 +122,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
+        android:visibility="gone"
         tools:listitem="@layout/card_for_recycler"
         android:id="@+id/recyclerGroups"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieprogi2"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="200dp"
+            android:visibility="visible"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="waiting.json"
+            app:lottie_loop="true"
+            app:lottie_speed="3" />
+
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/empty"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="empty.json"
+            app:lottie_loop="true"
+            app:lottie_speed="2" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="You haven't joined any groups yet"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
+
+
     </LinearLayout>
 
 <LinearLayout

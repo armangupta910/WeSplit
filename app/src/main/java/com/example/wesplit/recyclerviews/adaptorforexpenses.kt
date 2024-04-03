@@ -332,6 +332,7 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
+
             holder.progi.visibility = View.GONE
 
             holder.name.visibility = View.VISIBLE

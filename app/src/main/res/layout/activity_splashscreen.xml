@@ -18,4 +18,24 @@
         android:foregroundTint="@color/green1"
         android:adjustViewBounds="false"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:text="Checking Internet Connection..."
+        android:gravity="center_horizontal"
+        android:textSize="20dp"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieprogi"
+        android:layout_width="179dp"
+        android:layout_height="151dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="waiting.json"
+        app:lottie_loop="true"
+        app:lottie_speed="2" />
+
+
 </LinearLayout>

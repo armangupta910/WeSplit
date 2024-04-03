@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -92,7 +93,9 @@ class add_expense_activity : AppCompatActivity() {
             }
             Log.d(TAG,"1: ${friendsNametoUID}")
             Log.d(TAG,"2: ${UIDtoFriendsname}")
+            val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
             findViewById<ImageButton>(R.id.backAddExpenseFragment).setOnClickListener {
+                it.startAnimation(scaleAnimation)
                 startActivity(Intent(this,MainActivity::class.java))
                 overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
                 finish()
@@ -104,6 +107,7 @@ class add_expense_activity : AppCompatActivity() {
 
             var addExpense: ImageButton = findViewById(R.id.checkAddExpense)
             addExpense.setOnClickListener {
+                it.startAnimation(scaleAnimation)
                 findViewById<ProgressBar>(R.id.progress).visibility = View.VISIBLE
                 addExpense.visibility = View.GONE
                 var name = ""

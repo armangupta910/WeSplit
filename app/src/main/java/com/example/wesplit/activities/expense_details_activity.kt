@@ -22,6 +22,7 @@ import android.util.Log
 import android.view.PixelCopy
 import android.view.View
 import android.view.Window
+import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -43,9 +44,12 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 class expense_details_activity() : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expense_details)
+        val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
         val dateTime:String = intent.getStringExtra("key") as String
 //        val amount:String = intent.getStringExtra("amount") as String
         val name:String = intent.getStringExtra("name") as String
@@ -54,6 +58,7 @@ class expense_details_activity() : AppCompatActivity() {
         val split = intent.getSerializableExtra("split") as HashMap<String,String>
 
         findViewById<ImageView>(R.id.goback).setOnClickListener {
+            it.startAnimation(scaleAnimation)
                 startActivity(Intent(this,MainActivity::class.java))
             overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
 
@@ -92,6 +97,7 @@ class expense_details_activity() : AppCompatActivity() {
         }
 
         findViewById<ImageButton>(R.id.share).setOnClickListener {
+            it.startAnimation(scaleAnimation)
             val screenshot = takeScreenshot(this)
             val screenshotUri = saveScreenshotToCache(this, screenshot)
             screenshotUri?.let {

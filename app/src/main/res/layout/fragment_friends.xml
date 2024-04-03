@@ -7,11 +7,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.groupsFragment">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.groupsFragment"
     android:orientation="vertical"
     android:gravity="top">
@@ -80,9 +78,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
+            android:visibility="gone"
             tools:listitem="@layout/card_for_friends_list"
             android:id="@+id/recyclerFriends"/>
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_marginTop="200dp"
+            android:id="@+id/lottieprogi"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:foregroundGravity="center_vertical|center_horizontal"
+            android:visibility="visible"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="waiting.json"
+            app:lottie_loop="true"
+            app:lottie_speed="3" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/empty"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="empty.json"
+            app:lottie_loop="true"
+            app:lottie_speed="2" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="You haven't added any friends yet"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
     </LinearLayout>
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
