@@ -207,6 +207,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestore.getInstance
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.RGBLuminanceSource
@@ -261,38 +262,69 @@ class MainActivity : AppCompatActivity() {
             // Handle gallery selection
             data?.data?.let { uri ->
                 // Assuming you have a function to handle the scanning from a URI
-                scanQRCodeFromUri(uri,this)
+                scanQRCodeFromUri(uri, this)
             }
         } else {
             // Handle camera scanner result
             val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
 
-            Toast.makeText(this,result.toString(),Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, result.toString(), Toast.LENGTH_SHORT).show()
 
-            val groupdID = result.toString()
+            val qrContent = result.toString()
+            Toast.makeText(this,qrContent,Toast.LENGTH_SHORT).show()
 
-            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
-                val groups:MutableList<String> = it.data?.get("groups") as MutableList<String>
-                if(groupdID in groups){
-                    Toast.makeText(this,"You're already in the group!",Toast.LENGTH_SHORT).show()
+            FirebaseFirestore.getInstance().collection("Groups").document(qrContent).get().addOnSuccessListener {
+                val participants:MutableList<String> = it.data?.get("Participants") as MutableList<String>
+                if(FirebaseAuth.getInstance().currentUser?.uid.toString() in participants){
+                    Toast.makeText(this,"You're already in the Group!",Toast.LENGTH_SHORT).show()
                 }
                 else{
-                    groups.add(groupdID)
-                    FirebaseFirestore.getInstance().collection("Groups").document(groupdID).get().addOnSuccessListener {hehe->
-                        val parti:MutableList<String> = hehe.data?.get("Participants") as MutableList<String>
-                        val groupLoans:HashMap<String,String> = hehe.data?.get("Loans") as HashMap<String,String>
 
-                        parti.add(FirebaseAuth.getInstance().currentUser?.uid.toString())
-                        groupLoans[FirebaseAuth.getInstance().currentUser?.uid.toString()] = "0"
+                    for(i in participants){
+                        FirebaseFirestore.getInstance().collection("Users").document(i).get().addOnSuccessListener {it1->
+                            var friends:MutableList<String> = it1.data?.get("friends") as MutableList<String>
+                            if(FirebaseAuth.getInstance().currentUser?.uid.toString() in friends){
 
-                        FirebaseFirestore.getInstance().collection("Groups").document(groupdID).update("Participants",parti)
-                        FirebaseFirestore.getInstance().collection("Groups").document(groupdID).update("Loans",groupLoans)
-                        FirebaseFirestore.getInstance().collection("Groups").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("groups",groups)
+                            }
+                            else{
+                                friends.add(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                val loans:HashMap<String,String> = it1.data?.get("Loans") as HashMap<String, String>
+                                loans[FirebaseAuth.getInstance().currentUser?.uid.toString()] = "0"
+                                FirebaseFirestore.getInstance().collection("Users").document(i).update("friends",friends)
+                                FirebaseFirestore.getInstance().collection("Users").document(i).update("Loans",loans)
 
-                        Toast.makeText(this,"You've been added to the group!",Toast.LENGTH_SHORT).show()
+                                FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {it2->
+                                    var friendscurr = it2.data?.get("friends") as MutableList<String>
+                                    friendscurr.add(i)
+
+                                    val loanscurr = it2.data?.get("Loans") as HashMap<String,String>
+                                    loanscurr[i] = "0"
+
+                                    FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("friends",friendscurr)
+                                    FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("Loans",loanscurr)
+                                }
+                            }
+                        }
                     }
+
+                    participants.add(FirebaseAuth.getInstance().currentUser?.uid.toString());
+                    val loans:HashMap<String,String> = it.data?.get("Loans") as HashMap<String, String>
+                    loans[FirebaseAuth.getInstance().currentUser?.uid.toString()] = "0"
+
+                    FirebaseFirestore.getInstance().collection("Groups").document(result.toString()).update("Participants",participants)
+                    FirebaseFirestore.getInstance().collection("Groups").document(result.toString()).update("Loans",loans)
+
+                    FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {it4->
+                        val groups:MutableList<String> = it4.data?.get("groups") as MutableList<String>
+                        groups.add(qrContent)
+                        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("groups",groups).addOnSuccessListener {
+                            Toast.makeText(this,"You've been added to the group!",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
                 }
             }
+
 
             // Handle the scanned QR code string
         }
@@ -322,6 +354,58 @@ class MainActivity : AppCompatActivity() {
                     // If QR code is decoded successfully, use the result text
                     val qrContent = result.text
                     Toast.makeText(this,qrContent,Toast.LENGTH_SHORT).show()
+
+                    FirebaseFirestore.getInstance().collection("Groups").document(qrContent).get().addOnSuccessListener {
+                        val participants:MutableList<String> = it.data?.get("Participants") as MutableList<String>
+                        if(FirebaseAuth.getInstance().currentUser?.uid.toString() in participants){
+                            Toast.makeText(this,"You're already in the Group!",Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+
+                            for(i in participants){
+                                FirebaseFirestore.getInstance().collection("Users").document(i).get().addOnSuccessListener {it1->
+                                    var friends:MutableList<String> = it1.data?.get("friends") as MutableList<String>
+                                    if(FirebaseAuth.getInstance().currentUser?.uid.toString() in friends){
+
+                                    }
+                                    else{
+                                        friends.add(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                        val loans:HashMap<String,String> = it1.data?.get("Loans") as HashMap<String, String>
+                                        loans[FirebaseAuth.getInstance().currentUser?.uid.toString()] = "0"
+                                        FirebaseFirestore.getInstance().collection("Users").document(i).update("friends",friends)
+                                        FirebaseFirestore.getInstance().collection("Users").document(i).update("Loans",loans)
+
+                                        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {it2->
+                                            var friendscurr = it2.data?.get("friends") as MutableList<String>
+                                            friendscurr.add(i)
+
+                                            val loanscurr = it2.data?.get("Loans") as HashMap<String,String>
+                                            loanscurr[i] = "0"
+
+                                            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("friends",friendscurr)
+                                            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("Loans",loanscurr)
+                                        }
+                                    }
+                                }
+                            }
+
+                            participants.add(FirebaseAuth.getInstance().currentUser?.uid.toString());
+                            val loans:HashMap<String,String> = it.data?.get("Loans") as HashMap<String, String>
+                            loans[FirebaseAuth.getInstance().currentUser?.uid.toString()] = "0"
+
+                            FirebaseFirestore.getInstance().collection("Groups").document(result.toString()).update("Participants",participants)
+                            FirebaseFirestore.getInstance().collection("Groups").document(result.toString()).update("Loans",loans)
+
+                            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {it4->
+                                val groups:MutableList<String> = it4.data?.get("groups") as MutableList<String>
+                                groups.add(qrContent)
+                                FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("groups",groups).addOnSuccessListener {
+                                    Toast.makeText(this,"You've been added to the group!",Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                        }
+                    }
 
 
 

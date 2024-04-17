@@ -53,8 +53,6 @@ class groupsFragment : Fragment() {
 
         fetchGroupsAndSetupAutocomplete()
 
-
-
         var loans:HashMap<String,String> = hashMapOf()
 
         FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
