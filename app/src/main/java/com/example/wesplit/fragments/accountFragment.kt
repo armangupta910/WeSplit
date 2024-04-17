@@ -2,6 +2,7 @@ package com.example.wesplit.fragments
 
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -29,10 +30,12 @@ import com.google.zxing.qrcode.QRCodeWriter
 import java.io.File
 import java.io.FileOutputStream
 import android.provider.Settings
+import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.ProgressBar
 import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.activities.sign_in_activity
+import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.OutputStream
 
@@ -178,27 +181,14 @@ class accountFragment : Fragment() {
 
         // Set button click listener or other logic
         dialog.findViewById<Button>(R.id.share).setOnClickListener {
-            dialog.findViewById<Button>(R.id.share).startAnimation(scaleAnimation)
-            val qrCodeBitmap = generateQRCode(FirebaseAuth.getInstance().currentUser?.uid.toString())
-            val fileName = "qrCode.png" // You can use any name, just ensure it's unique
-            val fileUri = saveBitmapToFile(requireContext(), qrCodeBitmap!!, fileName)
-            Toast.makeText(requireContext(), "File generated succesfully for sharing", Toast.LENGTH_SHORT).show()
 
-            fileUri?.let {
-                val shareIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_STREAM, it)
-                    putExtra(Intent.EXTRA_TEXT,"Hey there, I just started using the WeSplit App and it is just Fabulous. I highly encourage you to use the App and be my friend there. Happy Splitting.\n Scan the QR code from the App to add me as a friend.\n My UID: ${FirebaseAuth.getInstance().currentUser?.uid.toString()}")
-                    type = "image/png"
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
-                val shareChooser = Intent.createChooser(shareIntent, null)
-                startActivity(shareChooser)
-            } ?: run {
-                // Handle the error when fileUri is null
-                Toast.makeText(requireContext(), "Error sharing QR code", Toast.LENGTH_SHORT).show()
-            }
 //            dialog.dismiss()
+
+            val qrCodeUri = qrCodeBitmap?.let { it1 -> saveBitmapToFile(requireContext(), it1) }
+            qrCodeUri?.let {
+                val message = "Hey there,\nAdd me as a friend to the WeSplit App so that we start recording the expenses. You can also use the QR code or my UID\nUID - ${FirebaseAuth.getInstance().currentUser?.uid.toString()}"
+                shareImageWithText(it,message,requireContext())
+            }
         }
 
         // Display the custom dialog
@@ -225,30 +215,34 @@ class accountFragment : Fragment() {
         return null
     }
 
-    private fun saveBitmapToFile(context: Context, bitmap: Bitmap, fileName: String): Uri? {
-        val file = File(context.cacheDir, fileName)
+    fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri? {
+        // Try to use the external cache directory for sharing purposes
+        val file = File(context.externalCacheDir, "shared_qr_code.png")
         try {
-            val stream: OutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            stream.flush()
-            stream.close()
-        } catch (e: IOException) {
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+            return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+        } catch (e: Exception) {
             e.printStackTrace()
-            return null
         }
-        return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+        return null
     }
 
-
-    private fun shareImageUri(uri: Uri) {
-        val shareIntent = Intent().apply {
+    fun shareImageWithText(uri: Uri, text: String, context: Context) {
+        val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_STREAM, uri) // Image URI
+            putExtra(Intent.EXTRA_TEXT, text) // Your text message
+            putExtra(Intent.EXTRA_SUBJECT, "QR Code Share") // Optional: you can set a subject for email apps
             type = "image/png"
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(shareIntent, "Share QR Code"))
+        context.startActivity(Intent.createChooser(shareIntent, "Share QR Code"))
     }
+
+
 
 
 

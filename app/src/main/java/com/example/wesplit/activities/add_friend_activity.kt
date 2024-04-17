@@ -63,6 +63,7 @@ class add_friend_activity : AppCompatActivity() {
                 userDocRef.update("Notification", notifications)
                     .addOnSuccessListener {
                         println("DocumentSnapshot successfully updated!")
+                        Toast.makeText(this,"Friends Request Sent",Toast.LENGTH_SHORT).show()
                     }
                     .addOnFailureListener { e ->
                         println("Error updating document: $e")
@@ -245,7 +246,7 @@ class add_friend_activity : AppCompatActivity() {
     }
 
     companion object {
-        private const val GALLERY_REQUEST_CODE = 1234 // Define a request code for gallery intent
+        const val GALLERY_REQUEST_CODE = 1234 // Define a request code for gallery intent
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

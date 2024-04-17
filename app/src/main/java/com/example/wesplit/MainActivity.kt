@@ -169,12 +169,18 @@
 
 package com.example.wesplit
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageButton
@@ -184,8 +190,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentContainerView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.example.wesplit.activities.add_expense_activity
+import com.example.wesplit.activities.add_friend_activity
 import com.example.wesplit.activities.create_group_activity
 import com.example.wesplit.activities.notifications
 import com.example.wesplit.activities.sign_in_activity
@@ -193,7 +203,18 @@ import com.example.wesplit.fragments.accountFragment
 import com.example.wesplit.fragments.activityFragment
 import com.example.wesplit.fragments.friendsFragment
 import com.example.wesplit.fragments.groupsFragment
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.RGBLuminanceSource
+import com.google.zxing.common.HybridBinarizer
+import com.google.zxing.integration.android.IntentIntegrator
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -201,12 +222,129 @@ class MainActivity : AppCompatActivity() {
         return dp * context.resources.displayMetrics.density
     }
 
+    private fun startScanner() {
+        // Show an options dialog or bottom sheet here to let the user choose between camera or gallery
+        val options = arrayOf("Scan using Camera", "Select from Gallery")
+        AlertDialog.Builder(this)
+            .setTitle("Select QR Code Source")
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> startCameraScanner() // User chose to scan using camera
+                    1 -> pickImageFromGallery() // User chose to select from gallery
+                }
+            }.show()
+    }
+
+    private fun startCameraScanner() {
+//        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        val integrator = IntentIntegrator(this).apply {
+            setPrompt("Scan a QR code")
+            setOrientationLocked(false)
+            setBeepEnabled(true)
+        }
+        integrator.initiateScan()
+    }
+
+    private fun pickImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, add_friend_activity.GALLERY_REQUEST_CODE)
+    }
+
+    companion object {
+        const val GALLERY_REQUEST_CODE = 1234 // Define a request code for gallery intent
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == add_friend_activity.GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // Handle gallery selection
+            data?.data?.let { uri ->
+                // Assuming you have a function to handle the scanning from a URI
+                scanQRCodeFromUri(uri,this)
+            }
+        } else {
+            // Handle camera scanner result
+            val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+            Toast.makeText(this,result.toString(),Toast.LENGTH_SHORT).show()
+
+            val groupdID = result.toString()
+
+            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+                val groups:MutableList<String> = it.data?.get("groups") as MutableList<String>
+                if(groupdID in groups){
+                    Toast.makeText(this,"You're already in the group!",Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    groups.add(groupdID)
+                    FirebaseFirestore.getInstance().collection("Groups").document(groupdID).get().addOnSuccessListener {hehe->
+                        val parti:MutableList<String> = hehe.data?.get("Participants") as MutableList<String>
+                        val groupLoans:HashMap<String,String> = hehe.data?.get("Loans") as HashMap<String,String>
+
+                        parti.add(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                        groupLoans[FirebaseAuth.getInstance().currentUser?.uid.toString()] = "0"
+
+                        FirebaseFirestore.getInstance().collection("Groups").document(groupdID).update("Participants",parti)
+                        FirebaseFirestore.getInstance().collection("Groups").document(groupdID).update("Loans",groupLoans)
+                        FirebaseFirestore.getInstance().collection("Groups").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("groups",groups)
+
+                        Toast.makeText(this,"You've been added to the group!",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            // Handle the scanned QR code string
+        }
+    }
+
+    private fun scanQRCodeFromUri(uri: Uri, context: Context) {
+        try {
+            // Convert URI to Bitmap
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+
+            if (bitmap != null) {
+                val width = bitmap.width
+                val height = bitmap.height
+                val pixels = IntArray(width * height)
+                bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+                bitmap.recycle()
+
+                // Create a binary bitmap source from the bitmap
+                val source = RGBLuminanceSource(width, height, pixels)
+                val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+
+                // Try to decode the QR code
+                val result = MultiFormatReader().decode(binaryBitmap)
+                if (result != null) {
+                    // If QR code is decoded successfully, use the result text
+                    val qrContent = result.text
+                    Toast.makeText(this,qrContent,Toast.LENGTH_SHORT).show()
+
+
+
+                }
+            }
+        }catch (e: Exception) {
+            // Handle exceptions
+            runOnUiThread {
+                Toast.makeText(context, "Invalid QR Code", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         findViewById<ImageView>(R.id.notification).setOnClickListener {
-            startActivity(Intent(this,notifications::class.java))
+            startActivity(Intent(this, notifications::class.java))
+        }
+
+        findViewById<ImageView>(R.id.qr).setOnClickListener {
+            startScanner()
         }
 
         val slideOutView = findViewById<LinearLayout>(R.id.specialButtons)
@@ -239,43 +377,56 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val token=getSharedPreferences("data", Context.MODE_PRIVATE)
-        val editor=token.edit()
-        editor.putString("data","wesplitisactivenow")
+        val token = getSharedPreferences("data", Context.MODE_PRIVATE)
+        val editor = token.edit()
+        editor.putString("data", "wesplitisactivenow")
         editor.commit()
 
-        val fragment:FragmentContainerView = findViewById(R.id.fragment)
-        supportFragmentManager.beginTransaction().add(R.id.fragment,groupsFragment()).commit()
+        val fragment: FragmentContainerView = findViewById(R.id.fragment)
+        supportFragmentManager.beginTransaction().add(R.id.fragment, groupsFragment()).commit()
 
         val groups = findViewById<LinearLayout>(R.id.navGroups)
         val friends = findViewById<LinearLayout>(R.id.navFriends)
         val activity = findViewById<LinearLayout>(R.id.navActivity)
         val account = findViewById<LinearLayout>(R.id.navAccount)
 
-        val groupsImage:ImageView = findViewById(R.id.groupsimage)
-        val friendsimage:ImageView = findViewById(R.id.friendsimage)
-        val activityimage:ImageView = findViewById(R.id.activityimage)
-        val accountimage:ImageView = findViewById(R.id.accountimage)
+        val groupsImage: ImageView = findViewById(R.id.groupsimage)
+        val friendsimage: ImageView = findViewById(R.id.friendsimage)
+        val activityimage: ImageView = findViewById(R.id.activityimage)
+        val accountimage: ImageView = findViewById(R.id.accountimage)
 
-        val groupstext:TextView = findViewById(R.id.groupstext)
-        val friendstext:TextView = findViewById(R.id.friendstext)
-        val activitytext:TextView = findViewById(R.id.activitytext)
-        val accounttext:TextView = findViewById(R.id.accounttext)
+        val groupstext: TextView = findViewById(R.id.groupstext)
+        val friendstext: TextView = findViewById(R.id.friendstext)
+        val activitytext: TextView = findViewById(R.id.activitytext)
+        val accounttext: TextView = findViewById(R.id.accounttext)
+
+
 
         findViewById<ImageView>(R.id.share).setOnClickListener {
             val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
             findViewById<ImageView>(R.id.share).startAnimation(scaleAnimation)
             val message:String = "\uD83C\uDF1F Exciting News! \uD83C\uDF1F I found an app that makes splitting expenses super easy for friends & groups - no more headaches over who owes what! Let’s give it a try for our next outing. Download it and let me know what you think! \uD83D\uDCF1\uD83D\uDCB8"
-            val sendIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, message)
-                type = "text/plain"
-                // Ensure the package is targeted to WhatsApp
-                setPackage("com.whatsapp")
+//            val sendIntent = Intent().apply {
+//                action = Intent.ACTION_SEND
+//                putExtra(Intent.EXTRA_TEXT, message)
+//                type = "text/plain"
+//                // Ensure the package is targeted to WhatsApp
+//                setPackage("com.whatsapp")
+//            }
+//
+//// Attempt to launch WhatsApp
+//            startActivity(sendIntent)
+
+            // Example usage
+            val context = this // Or any valid Context reference
+            val imageResourceId = R.drawable.whitebglogo // Replace with your actual image resource ID
+            val shareText = "Check out this cool image!" // The text you want to share
+
+            val imageUri = copyResourceToFile(context, imageResourceId, "shared_image.png")
+            imageUri?.let {
+                shareImageWithText(it, message, context)
             }
 
-// Attempt to launch WhatsApp
-            startActivity(sendIntent)
 
         }
 
@@ -361,6 +512,38 @@ class MainActivity : AppCompatActivity() {
             signout()
         }
     }
+
+    fun copyResourceToFile(context: Context, resourceId: Int, fileName: String): Uri? {
+        val file = File(context.externalCacheDir, fileName)
+        try {
+            val inputStream = context.resources.openRawResource(resourceId)
+            val outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+            inputStream.close()
+            outputStream.close()
+
+            // Return a content URI for the file using FileProvider
+            return FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun shareImageWithText(uri: Uri, text: String, context: Context) {
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri) // Image URI
+            putExtra(Intent.EXTRA_TEXT, text) // Text to share
+            type = "image/*"
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.startActivity(Intent.createChooser(shareIntent, "Application invite"))
+    }
+
+
+
+
     private fun signout(){
         val shared = getSharedPreferences("data",Context.MODE_PRIVATE)
         val edit = shared.edit()

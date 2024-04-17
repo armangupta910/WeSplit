@@ -41,6 +41,13 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <ImageView
+                android:id="@+id/qr"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/qr" />
+            <ImageView
                 android:id="@+id/notification"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -124,7 +131,19 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/green1"/>
+<!--    <androidx.viewpager2.widget.ViewPager2-->
+<!--        android:id="@+id/viewPager"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="8dp"/>-->
+
+<!--    <com.google.android.material.tabs.TabLayout-->
+<!--        android:id="@+id/tabLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"/>-->
+
     <androidx.cardview.widget.CardView
+        android:visibility="visible"
         android:id="@+id/navBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

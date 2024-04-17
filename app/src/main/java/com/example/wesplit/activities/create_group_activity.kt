@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.UUID
+import java.util.jar.JarInputStream
 
 class create_group_activity : AppCompatActivity() {
 
@@ -159,11 +160,11 @@ class create_group_activity : AppCompatActivity() {
 
         findViewById<ImageButton>(R.id.checkAddGroup).setOnClickListener {
 //            it.startAnimation(scaleAnimation)
-            Log.d(TAG,"Type: ${type} Friends: ${selectedFriendsUids}")
+            Log.d(TAG, "Type: ${type} Friends: ${selectedFriendsUids}")
             selectedFriendsUids.add(FirebaseAuth.getInstance().currentUser?.uid.toString())
 
-            val loans:HashMap<String,String> = hashMapOf()
-            for(i in selectedFriendsUids){
+            val loans: HashMap<String, String> = hashMapOf()
+            for (i in selectedFriendsUids) {
                 loans[i] = "0"
             }
 
@@ -172,22 +173,71 @@ class create_group_activity : AppCompatActivity() {
                 "Name" to findViewById<EditText>(R.id.groupName).text.toString(),
                 "Type" to type,
                 "Participants" to selectedFriendsUids,
-                "Expenses" to hashMapOf<String,MutableList<HashMap<String,String>>>(),
-                "Loans" to loans
+                "Expenses" to hashMapOf<String, MutableList<HashMap<String, String>>>(),
+                "Loans" to loans,
+                "Admin" to FirebaseAuth.getInstance().currentUser?.uid.toString()
             )
-            FirebaseFirestore.getInstance().collection("Groups").document(documentName).set(group).addOnSuccessListener {
-                Toast.makeText(this,"Group added",Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,MainActivity::class.java))
-                overridePendingTransition(androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom, androidx.appcompat.R.anim.abc_fade_out)
-                finish()
-            }
-            for(i in selectedFriendsUids){
-                FirebaseFirestore.getInstance().collection("Users").document(i).get().addOnSuccessListener {
-                    val groups:MutableList<String> = it.data?.get("groups") as MutableList<String>
-                    groups.add(documentName)
-                    FirebaseFirestore.getInstance().collection("Users").document(i).update("groups",groups).addOnSuccessListener {
-                        Toast.makeText(this,"Group added each",Toast.LENGTH_SHORT).show()
+            FirebaseFirestore.getInstance().collection("Groups").document(documentName).set(group)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, MainActivity::class.java))
+                    overridePendingTransition(
+                        androidx.appcompat.R.anim.abc_grow_fade_in_from_bottom,
+                        androidx.appcompat.R.anim.abc_fade_out
+                    )
+                    finish()
+                }
+            for (i in selectedFriendsUids) {
+                FirebaseFirestore.getInstance().collection("Users").document(i).get()
+                    .addOnSuccessListener {
+                        val friends: MutableList<String> =
+                            it.data?.get("friends") as MutableList<String>
+                        for (j in selectedFriendsUids) {
+                            if (i != j) {
+                                if (friends.contains(j) == false) {
+                                    val iFriends = friends
+                                    iFriends.add(j)
+                                    val iloans: HashMap<String, String> =
+                                        it.data?.get("Loans") as HashMap<String, String>
+                                    iloans[j] = "0"
+
+                                    FirebaseFirestore.getInstance().collection("Users").document(i)
+                                        .update("Loans", iloans)
+                                    FirebaseFirestore.getInstance().collection("Users").document(i)
+                                        .update("friends", iFriends)
+
+                                    FirebaseFirestore.getInstance().collection("Users").document(j)
+                                        .get().addOnSuccessListener { it1 ->
+                                        val jFriends: MutableList<String> =
+                                            it1?.data?.get("friends") as MutableList<String>
+                                        jFriends.add(i)
+                                        val jloans: HashMap<String, String> =
+                                            it1.data?.get("Loans") as HashMap<String, String>
+                                        jloans[i] = "0"
+
+                                        FirebaseFirestore.getInstance().collection("Users")
+                                            .document(j).update("Loans", jloans)
+                                        FirebaseFirestore.getInstance().collection("Users")
+                                            .document(j).update("friends", jFriends)
+
+                                    }
+
+
+                                }
+                            }
+                        }
                     }
+                for (i in selectedFriendsUids) {
+                    FirebaseFirestore.getInstance().collection("Users").document(i).get()
+                        .addOnSuccessListener {
+                            val groups: MutableList<String> =
+                                it.data?.get("groups") as MutableList<String>
+                            groups.add(documentName)
+                            FirebaseFirestore.getInstance().collection("Users").document(i)
+                                .update("groups", groups).addOnSuccessListener {
+                                Toast.makeText(this, "Group added each", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                 }
             }
         }

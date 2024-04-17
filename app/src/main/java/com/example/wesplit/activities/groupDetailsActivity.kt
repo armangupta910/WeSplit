@@ -11,6 +11,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -19,6 +20,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.wesplit.R
 import com.example.wesplit.recyclerviews.adaptorForGroupsFragment
 import com.example.wesplit.recyclerviews.adaptorforexpenses
@@ -32,12 +34,21 @@ class groupDetailsActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_details)
+        findViewById<Button>(R.id.remind).visibility = View.GONE
 
         val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 
         groupID = intent.getStringExtra("key").toString()
+
+        findViewById<ImageView>(R.id.settings).setOnClickListener {
+            val intent = Intent(this,groupsSettings::class.java)
+            intent.putExtra("groupID",groupID)
+
+            startActivity(intent)
+        }
 
 
         findViewById<TextView>(R.id.name).setText(groupID)
@@ -47,8 +58,12 @@ class groupDetailsActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance().collection("Groups").document(groupID).get().addOnSuccessListener {
 
             findViewById<Button>(R.id.settle).setOnClickListener {it1->
+                friend.clear()
                 it1.startAnimation(scaleAnimation)
-                friend = it.data?.get("Participants") as MutableList<String>
+                val demo = it.data?.get("Loans") as HashMap<String,String>
+                for(i in demo){
+                    friend.add(i.key)
+                }
 
                 friend.remove(FirebaseAuth.getInstance().currentUser?.uid.toString())
 
@@ -69,10 +84,18 @@ class groupDetailsActivity : AppCompatActivity() {
 
 
 
+
             findViewById<Button>(R.id.remind).setOnClickListener {it1 ->
                 it1.startAnimation(scaleAnimation)
 
-                val participants:MutableList<String> = it.data?.get("Participants") as MutableList<String>
+                var demo:HashMap<String,String> = hashMapOf()
+                demo = it.data?.get("Loans") as HashMap<String, String>
+
+                var participants:MutableList<String> = mutableListOf()
+
+                for(i in demo){
+                    participants.add(i.key)
+                }
 
 
 
@@ -135,6 +158,7 @@ class groupDetailsActivity : AppCompatActivity() {
             }
 
         }
+
 
         findViewById<Button>(R.id.addExpenseFloatingButton).setOnClickListener {
             it.startAnimation(scaleAnimation)

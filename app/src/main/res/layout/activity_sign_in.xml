@@ -5,41 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F3F3F3"
+    android:background="@color/white"
     android:gravity="center"
     android:layout_gravity="center"
-    tools:context=".activities.sign_in_activity">
+    tools:context=".activities.sign_in_activity"
+>
 
 
-    <ImageView
-        android:layout_width="255dp"
-        android:layout_height="255dp"
-        android:id="@+id/imageView2"
-        android:scaleType="fitXY"
-        android:src="@drawable/logo"
-        android:foregroundTint="@color/green1"
-        android:adjustViewBounds="false"/>
-    <LinearLayout
-        android:layout_marginTop="30dp"
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_margin="20dp"
+        android:layout_weight="9"
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_gravity="center">
+        android:gravity="center_horizontal">
 
-        <TextView
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:background="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13dp"
-            android:text="Continue with Google"
-            android:textStyle="bold"
-            />
+            app:tabIndicatorFullWidth="false"
+            android:layout_gravity="center_horizontal"
 
-    </LinearLayout>
+            app:tabMode="scrollable"/>
+    </FrameLayout>
+
     <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/google"
+        android:layout_marginTop="20dp"/>
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/googleSignIn"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@drawable/newgoogle"/>
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="13dp"
+        android:background="@drawable/bg_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Continue with Google"/>
+
+
 
 </LinearLayout>

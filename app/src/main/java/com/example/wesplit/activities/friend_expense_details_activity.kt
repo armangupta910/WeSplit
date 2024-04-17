@@ -361,15 +361,15 @@ class friend_expense_details_activity : AppCompatActivity() {
                 val secondItem = list[1]
                 val firstItem = list[0]
 
-                if(firstItem["Paid by"] == keyToFind.toString() || firstItem["Paid by"] == FirebaseAuth.getInstance().currentUser?.uid.toString()){
-                    matchingEntries[key] = list
-                }
-
-                // Check if the requested key is one of the keys in the second item's HashMap
-//                if (keyToFind in secondItem.keys) {
-//                    // If the condition is satisfied, add the original pair to the new HashMap
+//                if(firstItem["Paid by"] == keyToFind.toString() || firstItem["Paid by"] == FirebaseAuth.getInstance().currentUser?.uid.toString()){
 //                    matchingEntries[key] = list
 //                }
+
+                // Check if the requested key is one of the keys in the second item's HashMap
+                if (keyToFind in secondItem.keys) {
+                    // If the condition is satisfied, add the original pair to the new HashMap
+                    matchingEntries[key] = list
+                }
             }
         }
 

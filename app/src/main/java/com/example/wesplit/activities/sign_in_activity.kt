@@ -8,18 +8,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.example.wesplit.MainActivity
 import com.example.wesplit.R
+import com.example.wesplit.recyclerviews.MultiLayoutAdapter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -37,6 +43,26 @@ class sign_in_activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+
+        val viewPager: ViewPager2 = findViewById(R.id.viewPager)
+        viewPager.adapter = MultiLayoutAdapter()
+
+        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+//            tab.text = when (position) {
+//                0 -> "Home"
+//                1 -> "Profile"
+//                2 -> "Settings"
+//                else -> null
+//            }
+            tab.icon = when (position) {
+                0 -> ContextCompat.getDrawable(this, R.drawable.point)
+                1 -> ContextCompat.getDrawable(this, R.drawable.point)
+                2 -> ContextCompat.getDrawable(this, R.drawable.point)
+                else -> null
+            }
+        }.attach()
 
         val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
 //        token=getSharedPreferences("data", Context.MODE_PRIVATE)
@@ -59,7 +85,7 @@ class sign_in_activity : AppCompatActivity() {
 //                Toast.makeText(this,"Could not search",Toast.LENGTH_SHORT).show()
 //            }
 //        }
-        val butt:ImageView = findViewById(R.id.googleSignIn)
+        val butt:Button = findViewById(R.id.googleSignIn)
 
         FirebaseApp.initializeApp(this)
 
@@ -74,11 +100,21 @@ class sign_in_activity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         butt.setOnClickListener { view: View? ->
+            dimBackground()
             view?.startAnimation(scaleAnimation)
             Toast.makeText(this, "Logging In", Toast.LENGTH_SHORT).show()
             signInGoogle()
         }
     }
+
+    fun dimBackground() {
+        val window = window
+        val layoutParams = window.attributes
+        layoutParams.dimAmount = 0.5f // Adjust this value to control the dim amount
+        window.attributes = layoutParams
+        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    }
+
     private fun signInGoogle() {
         val signInIntent: Intent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, Req_Code)

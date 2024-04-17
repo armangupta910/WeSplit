@@ -1,5 +1,6 @@
 package com.example.wesplit.recyclerviews
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -12,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.Image
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +21,16 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.R
 import com.example.wesplit.activities.expense_details_activity
 import com.example.wesplit.activities.friend_expense_details_activity
+import com.example.wesplit.activities.groupDetailsActivity
+import com.example.wesplit.activities.groupsSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
@@ -32,7 +38,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import kotlin.math.abs
 
 
-class adaptorforfriendslist(val conext:Context,private val listioffriends:MutableList<String>):RecyclerView.Adapter<adaptorforfriendslist.view_holder>() {
+class adaptorforfriendslist(val conext:Context,private var listioffriends:MutableList<String>):RecyclerView.Adapter<adaptorforfriendslist.view_holder>() {
     class view_holder(itemView: View):RecyclerView.ViewHolder(itemView){
         val name:TextView = itemView.findViewById(R.id.name)
         val email:TextView = itemView.findViewById(R.id.email)
@@ -44,6 +50,10 @@ class adaptorforfriendslist(val conext:Context,private val listioffriends:Mutabl
         val progi:CircularProgressBar = itemView.findViewById(R.id.progressBar)
         val lotti1:LottieAnimationView = itemView.findViewById(R.id.lottieprogi1)
         val lotti2:LottieAnimationView = itemView.findViewById(R.id.lottieprogi2)
+        val delete:ImageView = itemView.findViewById(R.id.delete)
+
+        val card:LinearLayout = itemView.findViewById(R.id.deleteremove)
+        val view:View = itemView.findViewById(R.id.view)
 
 
     }
@@ -54,12 +64,20 @@ class adaptorforfriendslist(val conext:Context,private val listioffriends:Mutabl
         return view_holder(itemView)
     }
 
+    fun updateData(newItems: MutableList<String>) {
+        listioffriends = newItems
+        notifyDataSetChanged() // Notify any registered observers that the data set has changed.
+    }
+
     override fun getItemCount(): Int {
         return listioffriends.size
     }
 
     override fun onBindViewHolder(holder: view_holder, position: Int) {
-        val userId = listioffriends[position]
+        var userId = listioffriends[position]
+        if(listioffriends[position][0] == '!'){
+            userId = listioffriends[position].substring(37)
+        }
         val db = FirebaseFirestore.getInstance()
 
         // Reference to the user's document in the "Users" collection
@@ -129,13 +147,70 @@ class adaptorforfriendslist(val conext:Context,private val listioffriends:Mutabl
             holder.lotti1.visibility = View.GONE
             holder.lotti2.visibility = View.GONE
 
+            if(listioffriends[position][0] == '!'){
+                holder.delete.visibility = View.VISIBLE
+                holder.oweorlent.visibility = View.GONE
+                holder.amount.visibility = View.GONE
+
+            }
+
+
+
         }, 500) // Delay of 1 second
 
 
-        holder.friend.setOnClickListener {
 
+        holder.delete.setOnClickListener {
+            val groupID:String = listioffriends[position].substring(1,37)
+            FirebaseFirestore.getInstance().collection("Groups").document(groupID).get().addOnSuccessListener {
+                val demo:MutableList<String> = it.data?.get("Participants") as  MutableList<String>
+                val loans:HashMap<String,String> = it.data?.get("Loans") as HashMap<String, String>
+                    val builder = AlertDialog.Builder(conext)
+                    builder.setTitle("Confirmation")
+                    builder.setMessage("You have Pending settlements with the user. Do you still want to remove the user from the Group?")
+
+                    // Set the Positive Button (Yes)
+                    builder.setPositiveButton("Yes") { dialog, which ->
+                        // Handle Yes button click event
+                        demo.remove(listioffriends[position].substring(37))
+                        FirebaseFirestore.getInstance().collection("Groups").document(groupID).update("Participants",demo)
+
+
+
+                        Log.d(TAG,"Removing :- ${listioffriends[position].substring(37)}")
+
+                        FirebaseFirestore.getInstance().collection("Users").document(listioffriends[position].substring(37)).get().addOnSuccessListener {it1->
+                            val groups:MutableList<String> = it1.data?.get("groups") as MutableList<String>
+                            groups.remove(groupID)
+                            FirebaseFirestore.getInstance().collection("Users").document(listioffriends[position].substring(37)).update("groups",groups).addOnSuccessListener {
+                                Toast.makeText(conext,"Participant removed!",Toast.LENGTH_SHORT).show()
+                                val newdata = listioffriends
+                                newdata.remove(listioffriends[position])
+                                updateData(newdata)
+                            }
+                        }.addOnFailureListener {
+                            Toast.makeText(conext,"Data not found",Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+
+                    // Set the Negative Button (No)
+                    builder.setNegativeButton("No") { dialog, which ->
+                        // Handle No button click event
+
+
+                    }
+
+                    // Create and show the AlertDialog
+                    val dialog = builder.create()
+                    dialog.show()
+
+
+
+            }
         }
     }
+
 
     fun createLetterDrawable(context: Context, name: String): BitmapDrawable {
         val width = 100

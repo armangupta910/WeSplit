@@ -44,7 +44,7 @@ import java.util.Locale
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
 
-class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,MutableList<HashMap<String,String>>>>):RecyclerView.Adapter<adaptorforexpenses.view_holder>() {
+class adaptorforexpenses(val conti:Context, var data:MutableList<HashMap<String,MutableList<HashMap<String,String>>>>):RecyclerView.Adapter<adaptorforexpenses.view_holder>() {
     class view_holder(itemView: View):RecyclerView.ViewHolder(itemView){
         val name:TextView = itemView.findViewById(R.id.expenseName)
         val date:TextView = itemView.findViewById(R.id.date)
@@ -61,6 +61,11 @@ class adaptorforexpenses(val conti:Context,val data:MutableList<HashMap<String,M
         var itemView: View =
             LayoutInflater.from(parent.context).inflate(R.layout.card_for_expense,parent,false)
         return view_holder(itemView)
+    }
+
+    fun updateData(newData: MutableList<HashMap<String,MutableList<HashMap<String,String>>>>) {
+        data = newData
+        notifyDataSetChanged() // Notifies the adapter to refresh based on new data
     }
 
     override fun getItemCount(): Int {

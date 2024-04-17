@@ -6,6 +6,64 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.activityFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:cardBackgroundColor="@color/green1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="end"
+                >
+                <EditText
+                    android:editable="false"
+                    android:layout_weight="9"
+                    android:padding="10dp"
+                    android:id="@+id/datetext"
+                    android:drawableStart="@drawable/search_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Pick a Date to get Expenses"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:textColorHint="@color/black"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@drawable/bg_button"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <ImageButton
+                    android:visibility="gone"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/cross"
+                    android:background="@color/green1"
+                    android:id="@+id/clear"/>
+
+                <ImageButton
+                    android:visibility="visible"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/date"
+                    android:background="@color/green1"
+                    android:id="@+id/datePicker"/>
+
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black"/>
+    </LinearLayout>
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieprogi"
         android:layout_width="150dp"
@@ -17,15 +75,22 @@
         app:lottie_fileName="waiting.json"
         android:layout_gravity="center_vertical|center_horizontal" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
-        android:layout_weight="10"
-        android:visibility="visible"
-        tools:listitem="@layout/card_for_expense"
-        android:id="@+id/recyclerActivity"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerActivity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:visibility="visible"
+            tools:listitem="@layout/card_for_expense" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:text="You haven't added any friends yet"
+            android:text="We couldn't find any expenses for the Date"
             android:layout_gravity="center_vertical|center_horizontal"
             android:textSize="20dp"
             android:textStyle="bold"

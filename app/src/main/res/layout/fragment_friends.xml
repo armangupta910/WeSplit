@@ -68,6 +68,10 @@
             android:layout_height="2dp"
             android:background="@color/black"/>
     </LinearLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_weight="10"
         android:layout_width="match_parent"
@@ -116,6 +120,7 @@
             android:textStyle="bold"
             android:gravity="center_horizontal"/>
     </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 

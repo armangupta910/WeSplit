@@ -19,6 +19,7 @@ import androidx.core.view.forEach
 import androidx.core.widget.CompoundButtonCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.MainActivity
 import com.example.wesplit.R
@@ -34,6 +35,12 @@ class groupsFragment : Fragment() {
     private var selectedMenuItemId: Int? = null
 
     private lateinit var autoCompleteGroups: AutoCompleteTextView
+
+    lateinit var x:RecyclerView
+    lateinit var y:adaptorForGroupsFragment
+
+    var data:MutableList<HashMap<String,Any>> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,7 +53,7 @@ class groupsFragment : Fragment() {
 
         fetchGroupsAndSetupAutocomplete()
 
-        val data:MutableList<HashMap<String,Any>> = mutableListOf()
+
 
         var loans:HashMap<String,String> = hashMapOf()
 
@@ -87,8 +94,8 @@ class groupsFragment : Fragment() {
                             demodata["key"] = i.toString()
                             data.add(demodata)
 
-                            val x = frag.findViewById<RecyclerView>(R.id.recyclerGroups)
-                            val y = adaptorForGroupsFragment(requireContext(),data)
+                            x = frag.findViewById<RecyclerView>(R.id.recyclerGroups)
+                            y = adaptorForGroupsFragment(requireContext(),data)
                             x.layoutManager =
                                 LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
                             x.adapter = y
@@ -110,6 +117,59 @@ class groupsFragment : Fragment() {
 
             filter.startAnimation(scaleAnimation)
             showPopupMenu(view)
+        }
+
+        frag.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout).setOnRefreshListener {
+            frag.findViewById<LottieAnimationView>(R.id.lottieprogi2).visibility = View.VISIBLE
+            frag.findViewById<RecyclerView>(R.id.recyclerGroups).visibility = View.GONE
+            data.clear()
+            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+                loans = it.data?.get("Loans") as HashMap<String, String>
+                var amount:Int = 0
+                for(i in loans){
+                    amount += i.value.toInt()
+                }
+                if(amount<0){
+                    frag.findViewById<TextView>(R.id.totalAmount).setText("Overall, you've borrowed ₹ " + ((-1)*amount).toString())
+                    frag.findViewById<TextView>(R.id.totalAmount).setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                }
+                if(amount>0){
+                    frag.findViewById<TextView>(R.id.totalAmount).setText("Overall, you've lent ₹ " + (amount).toString())
+                    frag.findViewById<TextView>(R.id.totalAmount).setTextColor(ContextCompat.getColor(requireContext(), R.color.green1))
+                }
+                if(amount==0){
+                    frag.findViewById<TextView>(R.id.totalAmount).setText("Everything is settled up")
+                    frag.findViewById<TextView>(R.id.totalAmount).setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                }
+
+                frag.findViewById<TextView>(R.id.totalAmount).visibility = View.VISIBLE
+                frag.findViewById<LottieAnimationView>(R.id.lottieprogi).visibility = View.GONE
+            }
+
+            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
+                val groups:MutableList<String> = it.get("groups") as MutableList<String>
+                if(groups.size == 0){
+                    frag.findViewById<TextView>(R.id.text).visibility = View.VISIBLE
+                    frag.findViewById<LottieAnimationView>(R.id.empty).visibility = View.VISIBLE
+                }
+                for(i in groups){
+                    if(i!="") {
+                        FirebaseFirestore.getInstance().collection("Groups").document(i).get()
+                            .addOnSuccessListener {
+                                val demodata = it.data as HashMap<String,Any>
+                                demodata["key"] = i.toString()
+                                data.add(demodata)
+
+                                y.updateData(data)
+                            }
+                    }
+                }
+
+                frag.findViewById<LottieAnimationView>(R.id.lottieprogi2).visibility = View.GONE
+                frag.findViewById<RecyclerView>(R.id.recyclerGroups).visibility = View.VISIBLE
+                frag.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout).isRefreshing = false
+            }
+
         }
 
         return frag
@@ -137,17 +197,60 @@ class groupsFragment : Fragment() {
                 when (menuItem.itemId) {
                     R.id.allGroups -> {
                         // Handle option 1 clicked
+                        var newdata:MutableList<HashMap<String,Any>> = mutableListOf()
+                        newdata = data;
+
+                        y.updateData(newdata)
+
+
                         true
                     }
                     R.id.outstanding -> {
+                        var newdata:MutableList<HashMap<String,Any>> = mutableListOf()
+                        for(i in data){
+                            val Loans:HashMap<String,String> = i.get("Loans") as HashMap<String, String>
+                            val money:Int = Loans[FirebaseAuth.getInstance().currentUser?.uid.toString()]?.toInt()!!
+
+                            if(money == 0){
+                                newdata.add(i)
+                            }
+                        }
+
+                        y.updateData(newdata)
+
+
                         // Handle option 2 clicked
                         true
                     }
                     R.id.youowe -> {
+                        var newdata:MutableList<HashMap<String,Any>> = mutableListOf()
+
+                        for(i in data){
+                            val Loans:HashMap<String,String> = i.get("Loans") as HashMap<String, String>
+                            val money:Int = Loans[FirebaseAuth.getInstance().currentUser?.uid.toString()]?.toInt()!!
+
+                            if(money < 0){
+                                newdata.add(i)
+                            }
+                        }
+
+                        y.updateData(newdata)
                         // Handle option 3 clicked
                         true
                     }
                     R.id.oweyou -> {
+                        var newdata:MutableList<HashMap<String,Any>> = mutableListOf()
+
+                        for(i in data){
+                            val Loans:HashMap<String,String> = i.get("Loans") as HashMap<String, String>
+                            val money:Int = Loans[FirebaseAuth.getInstance().currentUser?.uid.toString()]?.toInt()!!
+
+                            if(money > 0){
+                                newdata.add(i)
+                            }
+                        }
+
+                        y.updateData(newdata)
                         // Handle option 3 clicked
                         true
                     }

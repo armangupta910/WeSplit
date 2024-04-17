@@ -28,7 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 
 
-class adaptorForGroupsFragment(val context:Context,val data:MutableList<HashMap<String,Any>>):RecyclerView.Adapter<adaptorForGroupsFragment.view_holder>() {
+class adaptorForGroupsFragment(val context:Context, var data:MutableList<HashMap<String,Any>>):RecyclerView.Adapter<adaptorForGroupsFragment.view_holder>() {
     class view_holder(itemView: View):RecyclerView.ViewHolder(itemView){
         val name:TextView = itemView.findViewById(R.id.name)
         val type:TextView = itemView.findViewById(R.id.type)
@@ -52,6 +52,11 @@ class adaptorForGroupsFragment(val context:Context,val data:MutableList<HashMap<
 
     override fun getItemCount(): Int {
         return data.size
+    }
+
+    fun updateData(newItems: MutableList<HashMap<String,Any>>) {
+        data = newItems
+        notifyDataSetChanged()  // Notify any registered observers that the data set has changed.
     }
 
     override fun onBindViewHolder(holder: view_holder, position: Int) {
