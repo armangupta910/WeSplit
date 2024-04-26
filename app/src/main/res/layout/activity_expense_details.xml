@@ -40,9 +40,11 @@
                 android:textStyle="bold"/>
 
             <ImageButton
+                android:layout_gravity="center_vertical"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/share"
+                android:visibility="gone"
                 android:background="@color/green1"
                 android:id="@+id/share"/>
 
@@ -51,6 +53,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/delete"
+                android:visibility="gone"
                 android:background="@color/green1"
                 android:id="@+id/delete"/>
 

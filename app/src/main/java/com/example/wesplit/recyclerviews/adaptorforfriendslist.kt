@@ -148,7 +148,14 @@ class adaptorforfriendslist(val conext:Context,private var listioffriends:Mutabl
             holder.lotti2.visibility = View.GONE
 
             if(listioffriends[position][0] == '!'){
-                holder.delete.visibility = View.VISIBLE
+                val groupID1111:String = listioffriends[position].substring(1,37)
+                FirebaseFirestore.getInstance().collection("Groups").document(groupID1111).get().addOnSuccessListener {
+                    val admin:String = it.data?.get("Admin") as String
+                    if(admin == FirebaseAuth.getInstance().currentUser?.uid.toString()){
+                        holder.delete.visibility = View.VISIBLE
+                    }
+                }
+//                holder.delete.visibility = View.VISIBLE
                 holder.oweorlent.visibility = View.GONE
                 holder.amount.visibility = View.GONE
 
@@ -187,6 +194,7 @@ class adaptorforfriendslist(val conext:Context,private var listioffriends:Mutabl
                                 val newdata = listioffriends
                                 newdata.remove(listioffriends[position])
                                 updateData(newdata)
+
                             }
                         }.addOnFailureListener {
                             Toast.makeText(conext,"Data not found",Toast.LENGTH_SHORT).show()

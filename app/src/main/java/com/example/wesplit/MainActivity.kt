@@ -270,8 +270,8 @@ class MainActivity : AppCompatActivity() {
 
             Toast.makeText(this, result.toString(), Toast.LENGTH_SHORT).show()
 
-            val qrContent = result.toString()
-            Toast.makeText(this,qrContent,Toast.LENGTH_SHORT).show()
+            val qrContent = result.contents.toString()
+            Toast.makeText(this,"Group ID is :- " + qrContent,Toast.LENGTH_SHORT).show()
 
             FirebaseFirestore.getInstance().collection("Groups").document(qrContent).get().addOnSuccessListener {
                 val participants:MutableList<String> = it.data?.get("Participants") as MutableList<String>
@@ -311,14 +311,15 @@ class MainActivity : AppCompatActivity() {
                     val loans:HashMap<String,String> = it.data?.get("Loans") as HashMap<String, String>
                     loans[FirebaseAuth.getInstance().currentUser?.uid.toString()] = "0"
 
-                    FirebaseFirestore.getInstance().collection("Groups").document(result.toString()).update("Participants",participants)
-                    FirebaseFirestore.getInstance().collection("Groups").document(result.toString()).update("Loans",loans)
+                    FirebaseFirestore.getInstance().collection("Groups").document(qrContent).update("Participants",participants)
+                    FirebaseFirestore.getInstance().collection("Groups").document(qrContent).update("Loans",loans)
 
                     FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {it4->
                         val groups:MutableList<String> = it4.data?.get("groups") as MutableList<String>
                         groups.add(qrContent)
                         FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("groups",groups).addOnSuccessListener {
                             Toast.makeText(this,"You've been added to the group!",Toast.LENGTH_SHORT).show()
+                            recreate()
                         }
                     }
 
@@ -401,6 +402,8 @@ class MainActivity : AppCompatActivity() {
                                 groups.add(qrContent)
                                 FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("groups",groups).addOnSuccessListener {
                                     Toast.makeText(this,"You've been added to the group!",Toast.LENGTH_SHORT).show()
+                                    recreate()
+
                                 }
                             }
 
@@ -433,7 +436,7 @@ class MainActivity : AppCompatActivity() {
 
         val slideOutView = findViewById<LinearLayout>(R.id.specialButtons)
         val triggerView = findViewById<CardView>(R.id.arrowButton)
-        val visibleWidthPx = dpToPx(50, this)
+        val visibleWidthPx = dpToPx(80, this)
 
         slideOutView.post {
             val viewWidthPx = slideOutView.width.toFloat()
@@ -503,10 +506,10 @@ class MainActivity : AppCompatActivity() {
 
             // Example usage
             val context = this // Or any valid Context reference
-            val imageResourceId = R.drawable.whitebglogo // Replace with your actual image resource ID
+            val imageResourceId = R.drawable.logo // Replace with your actual image resource ID
             val shareText = "Check out this cool image!" // The text you want to share
 
-            val imageUri = copyResourceToFile(context, imageResourceId, "shared_image.png")
+            val imageUri = copyResourceToFile(context, imageResourceId, "logo.png")
             imageUri?.let {
                 shareImageWithText(it, message, context)
             }

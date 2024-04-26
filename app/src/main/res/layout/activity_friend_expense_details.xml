@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.groupsFragment">
@@ -40,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/delete"/>
+                    android:src="@drawable/logo"/>
 
             </FrameLayout>
 
@@ -72,7 +80,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="Friend Name"
+                        android:text="WeSplit"
                         android:textColor="@color/black"
                         android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
@@ -101,19 +109,20 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.groupsFragment"
     android:orientation="vertical"
-    android:id="@+id/parent"
     android:gravity="top">
+
 
 
     <LinearLayout
@@ -127,12 +136,12 @@
             android:id="@+id/image"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/profile_image"/>
+            android:src="@drawable/logo"/>
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name"
+            android:text="WeSplit"
             android:textColor="@color/black"
             android:textSize="15dp"
             android:layout_marginLeft="20dp"
@@ -146,7 +155,7 @@
         android:id="@+id/amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lent or Borrowed"
+        android:text="You are all settled."
         android:textSize="15dp"
         android:textColor="@color/black"
         android:layout_marginLeft="20dp"
@@ -191,10 +200,29 @@
         android:id="@+id/recyclerFriendsDetailedExpenses"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:layout_marginTop="10dp"
         android:layout_weight="10"
         tools:listitem="@layout/card_for_expense" />
 
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_marginTop="20dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        app:lottie_fileName="khali.json"
+        android:id="@+id/khali"
+        android:visibility="gone"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Expenses yet"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:textSize="15dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/text"/>
 </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -208,7 +236,10 @@
         android:layout_marginBottom="50dp"
         android:textSize="15dp"
         android:textStyle="bold"
+        android:visibility="gone"
         android:text="Export as CSV"
         android:layout_gravity="bottom|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -95,6 +95,7 @@
                         android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
                     <ImageButton
+                        android:visibility="gone"
                         android:layout_marginRight="10dp"
                         android:id="@+id/action_icon_one"
                         android:layout_width="30dp"

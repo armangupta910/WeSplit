@@ -12,6 +12,7 @@ import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -100,6 +101,8 @@ class sign_in_activity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         butt.setOnClickListener { view: View? ->
+            findViewById<ImageView>(R.id.google).visibility = View.GONE
+            findViewById<ProgressBar>(R.id.progi).visibility = View.VISIBLE
             dimBackground()
             view?.startAnimation(scaleAnimation)
             Toast.makeText(this, "Logging In", Toast.LENGTH_SHORT).show()
@@ -133,7 +136,9 @@ class sign_in_activity : AppCompatActivity() {
                 UpdateUI(account)
             }
         } catch (e: ApiException) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Sign in Failed!", Toast.LENGTH_SHORT).show()
+            findViewById<ImageView>(R.id.google).visibility = View.VISIBLE
+            findViewById<ProgressBar>(R.id.progi).visibility = View.GONE
         }
     }
     private fun UpdateUI(account: GoogleSignInAccount) {
@@ -159,6 +164,8 @@ class sign_in_activity : AppCompatActivity() {
                     }
                 }.addOnFailureListener {
                     Toast.makeText(this,"Could not search",Toast.LENGTH_SHORT).show()
+                    findViewById<ImageView>(R.id.google).visibility = View.VISIBLE
+                    findViewById<ProgressBar>(R.id.progi).visibility = View.GONE
                 }
             }
         }

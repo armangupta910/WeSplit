@@ -32,6 +32,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.airbnb.lottie.LottieAnimationView
 import com.example.wesplit.R
 import com.example.wesplit.recyclerviews.adaptorforexpenses
 import com.example.wesplit.recyclerviews.adaptorforsplitdisplay
@@ -57,6 +59,10 @@ class friend_expense_details_activity : AppCompatActivity() {
         setContentView(R.layout.activity_friend_expense_details)
 
         val scaleAnimation = AnimationUtils.loadAnimation(this,R.anim.button_scale)
+
+        findViewById<SwipeRefreshLayout>(R.id.swipe).setOnRefreshListener {
+            recreate()
+        }
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -226,6 +232,12 @@ class friend_expense_details_activity : AppCompatActivity() {
                     LinearLayoutManager.VERTICAL, false
                 )
                 x.adapter = y
+
+                if(data.size == 0){
+                    findViewById<RecyclerView>(R.id.recyclerFriendsDetailedExpenses).visibility = View.GONE
+                    findViewById<LottieAnimationView>(R.id.khali).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.text).visibility = View.VISIBLE
+                }
 
                 val exportCsvButton: Button = findViewById(R.id.export)
                 exportCsvButton.setOnClickListener {

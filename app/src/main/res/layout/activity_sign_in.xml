@@ -9,6 +9,7 @@
     android:gravity="center"
     android:layout_gravity="center"
     tools:context=".activities.sign_in_activity"
+    android:layout_marginBottom="20dp"
 >
 
 
@@ -36,10 +37,17 @@
     </FrameLayout>
 
     <ImageView
+        android:id="@+id/google"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/google"
         android:layout_marginTop="20dp"/>
+    <ProgressBar
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        android:id="@+id/progi"/>
 
 
 
