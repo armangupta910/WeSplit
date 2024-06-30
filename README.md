@@ -1,13 +1,13 @@
 # WeSplit
 
-WeSplit is an Android application designed for seamless expense splitting among friends and groups.
+WeSplit is an Android application designed for seamless and hazzlefree expense splitting among friends and groups.
 
 ## Features
 
 - Add friends using personalized QR Codes.
 - Join groups using QR Codes for simplified expense management.
-- Add expenses and divide them among friends based on various criteria.
-- Remind friends about pending dues.
+- Add expenses and divide them among friends based on various criterion(including custom criterion).
+- Timely reminders to friends about pending dues.
 - Settle amounts with friends directly through the app.
 - View detailed expense history associated with friends or groups.
 
